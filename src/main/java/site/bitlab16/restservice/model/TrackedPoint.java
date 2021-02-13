@@ -32,14 +32,21 @@ public class TrackedPoint {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof TrackedPoint)) return false;
+
         TrackedPoint that = (TrackedPoint) o;
-        return peopleConcentration == that.peopleConcentration && Objects.equals(id, that.id) && Objects.equals(placeName, that.placeName);
+
+        if (peopleConcentration != that.peopleConcentration) return false;
+        if (!Objects.equals(id, that.id)) return false;
+        return Objects.equals(placeName, that.placeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, placeName, peopleConcentration);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (placeName != null ? placeName.hashCode() : 0);
+        result = 31 * result + peopleConcentration;
+        return result;
     }
 
     public void setPlaceName(String placeName) {

@@ -1,10 +1,9 @@
 package site.bitlab16.restservice.model;
 
-import java.lang.Object;
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Objects;
 
 
 @Entity
@@ -14,6 +13,12 @@ public class TrackedPoint {
     private int peopleConcentration;
 
     public TrackedPoint() {}
+
+    public TrackedPoint(Long id, String placeName, int peopleConcentration){
+        this.id = id;
+        this.placeName = placeName;
+        this.peopleConcentration = peopleConcentration;
+    }
 
     public TrackedPoint(String placeName, int peopleConcentration){
         this.placeName = placeName;

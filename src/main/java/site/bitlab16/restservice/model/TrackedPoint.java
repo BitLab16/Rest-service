@@ -1,76 +1,99 @@
 package site.bitlab16.restservice.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 
 @Entity
+@Table(name = "tracked_point")
 public class TrackedPoint {
-    private @Id @GeneratedValue Long id;
-    private String placeName;
-    private int peopleConcentration;
+
+    @Id
+    private Long id;
+
+    @Column(name = "point_name")
+    private String name;
+
+    @Column(name = "code")
+    private Long code;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "location")
+    private String location;
 
     public TrackedPoint() {}
 
-    public TrackedPoint(Long id, String placeName, int peopleConcentration){
+    public TrackedPoint(Long id, String name, Long code, String description, String location) {
         this.id = id;
-        this.placeName = placeName;
-        this.peopleConcentration = peopleConcentration;
-    }
-
-    public TrackedPoint(String placeName, int peopleConcentration){
-        this.placeName = placeName;
-        this.peopleConcentration = peopleConcentration;
-    }
-
-    @Override
-    public String toString() {
-        return "TrackedPoint{" +
-                "id=" + id +
-                ", placeName='" + placeName + '\'' +
-                ", peopleConcentration=" + peopleConcentration +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TrackedPoint)) return false;
-
-        TrackedPoint that = (TrackedPoint) o;
-
-        if (peopleConcentration != that.peopleConcentration) return false;
-        if (!Objects.equals(id, that.id)) return false;
-        return Objects.equals(placeName, that.placeName);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (placeName != null ? placeName.hashCode() : 0);
-        result = 31 * result + peopleConcentration;
-        return result;
-    }
-
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
-    }
-
-    public void setPeopleConcentration(int peopleConcentration) {
-        this.peopleConcentration = peopleConcentration;
+        this.name = name;
+        this.code = code;
+        this.description = description;
+        this.location = location;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getPlaceName() {
-        return placeName;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public int getPeopleConcentration() {
-        return peopleConcentration;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getCode() {
+        return code;
+    }
+
+    public void setCode(Long code) {
+        this.code = code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrackedPoint that = (TrackedPoint) o;
+        return id.equals(that.id) && name.equals(that.name) && code.equals(that.code) && Objects.equals(description, that.description) && location.equals(that.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, code, description, location);
+    }
+
+    @Override
+    public String toString() {
+        return "TrackedPoint{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code=" + code +
+                ", description='" + description + '\'' +
+                ", location='" + location + '\'' +
+                '}';
     }
 }

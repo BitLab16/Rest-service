@@ -45,9 +45,9 @@ public class TrackedPointServiceIntegrationTest {
 
     @BeforeEach
     public void setUpDB() {
-        var p1 = new TrackedPoint(1L,"Piazza dei signori", 150);
-        var p2 = new TrackedPoint(2L,"Prato della valle", 500);
-        var p3 = new TrackedPoint(3L,"Piazza della frutta", 200);
+        var p1 = new TrackedPoint(1L, "Piazza dei signori", 100L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
+        var p2 = new TrackedPoint(2L, "Piazza della frutta", 200L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
+        var p3 = new TrackedPoint(3L,"Prato della valle", 300L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
 
         Mockito.when(pointRepository.findAll()).thenReturn(Arrays.asList(p1, p2, p3));
         Mockito.when(pointRepository.findById(p1.getId())).thenReturn(java.util.Optional.of(p1));
@@ -55,12 +55,12 @@ public class TrackedPointServiceIntegrationTest {
 
     @Test
     public void whenGetAll_thenTrackedPointShouldBeReturn() {
-        var p1 = new TrackedPoint(1L,"Piazza dei signori", 150);
-        var p2 = new TrackedPoint(2L,"Prato della valle", 500);
-        var p3 = new TrackedPoint(3L,"Piazza della frutta", 200);
+        var p1 = new TrackedPoint(1L, "Piazza dei signori", 100L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
+        var p2 = new TrackedPoint(2L, "Piazza della frutta", 200L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
+        var p3 = new TrackedPoint(3L,"Prato della valle", 300L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
         List<TrackedPoint> points = pointService.findAll();
         verifyFindAllTrackedPointsIsCalledOnce();
-        assertThat(points).hasSize(3).extracting(TrackedPoint::getPlaceName).contains(p1.getPlaceName(), p2.getPlaceName(), p3.getPlaceName());
+        assertThat(points).hasSize(3).extracting(TrackedPoint::getName).contains(p1.getName(), p2.getName(), p3.getName());
     }
 
     @Test
@@ -71,7 +71,11 @@ public class TrackedPointServiceIntegrationTest {
     @Test
     public void whenValidId_thenTrackedPointShouldNotBeFound() {
         Optional<TrackedPoint> point = pointService.findById(1L);
-        assertThat(point.orElse(new TrackedPoint("Piazza dei signori", 150)) .getPlaceName()).isEqualTo("Piazza dei signori");
+        assertThat(point.orElse(new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                "0101000020E61000000000000000805BC00000000000003E40")) .getName()).isEqualTo("Piazza dei signori");
         verifyFindByIdIsCalledOnce();
     }
 

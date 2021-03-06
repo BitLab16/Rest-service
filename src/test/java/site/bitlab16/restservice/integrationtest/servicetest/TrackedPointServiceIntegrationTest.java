@@ -16,6 +16,7 @@ import site.bitlab16.restservice.model.TrackedPoint;
 import site.bitlab16.restservice.repository.TrackedPointRepository;
 import site.bitlab16.restservice.service.TrackedPointService;
 
+import org.springframework.data.geo.Point;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,9 +46,9 @@ public class TrackedPointServiceIntegrationTest {
 
     @BeforeEach
     public void setUpDB() {
-        var p1 = new TrackedPoint(1L, "Piazza dei signori", 100L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
-        var p2 = new TrackedPoint(2L, "Piazza della frutta", 200L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
-        var p3 = new TrackedPoint(3L,"Prato della valle", 300L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
+        var p1 = new TrackedPoint(1L, "Piazza dei signori", 100L,"Una delle piazze più importati di padova",new Point(-110, 30));
+        var p2 = new TrackedPoint(2L, "Piazza della frutta", 200L,"Una delle piazze più importati di padova",new Point(-110, 30));
+        var p3 = new TrackedPoint(3L,"Prato della valle", 300L,"Una delle piazze più importati di padova",new Point(-110, 30));
 
         Mockito.when(pointRepository.findAll()).thenReturn(Arrays.asList(p1, p2, p3));
         Mockito.when(pointRepository.findById(p1.getId())).thenReturn(java.util.Optional.of(p1));
@@ -55,9 +56,9 @@ public class TrackedPointServiceIntegrationTest {
 
     @Test
     public void whenGetAll_thenTrackedPointShouldBeReturn() {
-        var p1 = new TrackedPoint(1L, "Piazza dei signori", 100L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
-        var p2 = new TrackedPoint(2L, "Piazza della frutta", 200L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
-        var p3 = new TrackedPoint(3L,"Prato della valle", 300L,"Una delle piazze più importati di padova","0101000020E61000000000000000805BC00000000000003E40");
+        var p1 = new TrackedPoint(1L, "Piazza dei signori", 100L,"Una delle piazze più importati di padova",new Point(-110, 30));
+        var p2 = new TrackedPoint(2L, "Piazza della frutta", 200L,"Una delle piazze più importati di padova",new Point(-110, 30));
+        var p3 = new TrackedPoint(3L,"Prato della valle", 300L,"Una delle piazze più importati di padova",new Point(-110, 30));
         List<TrackedPoint> points = pointService.findAll();
         verifyFindAllTrackedPointsIsCalledOnce();
         assertThat(points).hasSize(3).extracting(TrackedPoint::getName).contains(p1.getName(), p2.getName(), p3.getName());
@@ -75,7 +76,7 @@ public class TrackedPointServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                "0101000020E61000000000000000805BC00000000000003E40")) .getName()).isEqualTo("Piazza dei signori");
+                new Point(-110, 30))) .getName()).isEqualTo("Piazza dei signori");
         verifyFindByIdIsCalledOnce();
     }
 

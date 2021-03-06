@@ -1,6 +1,6 @@
 package site.bitlab16.restservice.repository;
 
-import com.sun.istack.NotNull;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

@@ -11,6 +11,7 @@ import site.bitlab16.restservice.repository.GatheringRepository;
 import site.bitlab16.restservice.repository.TrackedPointRepository;
 import site.bitlab16.restservice.service.TrackedPointService;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -35,4 +36,6 @@ public class TrackedPointController {
                 .orElseThrow(() -> new PointNotFoundException(id));
     }
 
+    @GetMapping("/pastData/{time}")
+    List<Gathering> pastData(Timestamp time){ return gatheringService.findPastGatherings(time); }
 }

@@ -6,6 +6,7 @@ import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.repository.GatheringRepository;
 import site.bitlab16.restservice.repository.TrackedPointRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public class GatheringService {
     private GatheringRepository repository;
 
     public List<Gathering> lastUpdate() {return repository.findLastGatheringForAllPoint();}
+
+    public List<Gathering> pastData(Timestamp time) {return repository.findPastGatherings(time);}
 }

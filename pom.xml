@@ -11,8 +11,9 @@
 	<groupId>site.bitlab16</groupId>
 	<artifactId>rest-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>rest-service</name>
-	<description>POC for rest service</description>
+	<description>PcleaOC for rest service</description>
 	<properties>
 		<java.version>15</java.version>
 	</properties>
@@ -108,5 +109,13 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+	<repository>
+		<id>github</id>
+		<name>bitalb16</name>
+		<url>https://maven.pkg.github.com/BitLab16/Rest-service</url>
+	</repository>
+	</distributionManagement>
 
 </project>

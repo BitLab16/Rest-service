@@ -1,4 +1,4 @@
-FROM maven:3.6.3-jdk-15-alpine AS MAVEN_ENV
+FROM maven:3.6.3-adoptopenjdk-15 AS MAVEN_ENV
 WORKDIR /build/
 COPY pom.xml /build
 COPY src /build/src

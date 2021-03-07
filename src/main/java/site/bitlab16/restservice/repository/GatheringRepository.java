@@ -38,4 +38,19 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
             WHERE s.rk = 1
             """, nativeQuery = true)
     List<Gathering> findPastGatherings(@Param("time") Timestamp time);
+
+    @Query(value = """
+            WITH summary AS(
+                  SELECT g.id,\s
+                         g.tracked_point_id,
+                         g.detection_time,
+                         ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id)
+                             ORDER BY g.detection_time ASC) as rk
+                         FROM gatherings_prediction g
+                         WHERE g.detection_time > :time)
+            SELECT s.*
+            FROM summary s
+            WHERE s.rk = 1
+            """, nativeQuery = true)
+    List<Gathering> findFutureGatherings(@Param("time") Timestamp time);
 }

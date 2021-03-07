@@ -38,4 +38,8 @@ public class TrackedPointController {
 
     @GetMapping("/pastData/{time}")
     List<Gathering> pastData(Timestamp time){ return gatheringService.findPastGatherings(time); }
+
+    @GetMapping("/futureData/{time}")
+    List<Gathering> futureData(Timestamp time){ return gatheringService.findFutureGatherings(time); }
+
 }

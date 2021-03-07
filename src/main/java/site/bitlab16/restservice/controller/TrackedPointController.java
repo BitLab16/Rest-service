@@ -8,6 +8,7 @@ import site.bitlab16.restservice.exception.PointNotFoundException;
 import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.TrackedPoint;
 import site.bitlab16.restservice.repository.GatheringRepository;
+import site.bitlab16.restservice.repository.TrackedPointRepository;
 import site.bitlab16.restservice.service.TrackedPointService;
 
 import java.util.List;

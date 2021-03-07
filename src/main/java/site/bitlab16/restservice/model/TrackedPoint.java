@@ -1,5 +1,6 @@
 package site.bitlab16.restservice.model;
 
+import org.springframework.data.geo.Point;
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -21,11 +22,11 @@ public class TrackedPoint {
     private String description;
 
     @Column(name = "location")
-    private String location;
+    private Point location;
 
     public TrackedPoint() {}
 
-    public TrackedPoint(Long id, String name, Long code, String description, String location) {
+    public TrackedPoint(Long id, String name, Long code, String description, Point location) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -65,13 +66,9 @@ public class TrackedPoint {
         this.description = description;
     }
 
-    public String getLocation() {
-        return location;
-    }
+    public Point getLocation() { return location; }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public void setLocation(Point location) { this.location = location; }
 
     @Override
     public boolean equals(Object o) {
@@ -93,7 +90,7 @@ public class TrackedPoint {
                 ", name='" + name + '\'' +
                 ", code=" + code +
                 ", description='" + description + '\'' +
-                ", location='" + location + '\'' +
+                ", location='" + location.toString() + '\'' +
                 '}';
     }
 }

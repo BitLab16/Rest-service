@@ -29,7 +29,6 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
                 SELECT *
                 FROM gatherings_detection g
                 WHERE date_trunc('day', g.detection_time) = :day
-                GROUP BY date_trunc('day', g.detection_time)
             """, nativeQuery = true)
     Collection<Gathering> getPastDayGathering(Date day);
 
@@ -37,7 +36,6 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
                 SELECT *
                 FROM gatherings_prediction g
                 WHERE date_trunc('day', g.detection_time) = :day
-                GROUP BY date_trunc('day', g.detection_time)
             """, nativeQuery = true)
     Collection<Gathering> getFutureDayGathering(Date day);
 

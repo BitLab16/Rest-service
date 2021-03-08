@@ -1,0 +1,14 @@
+GET http://localhost:8080/points/{{time}}
+Accept: application/json
+
+###
+GET http://localhost:8080/point/{{id}}
+Accept: application/json
+
+###
+
+GET http://localhost:8080/points
+Accept: application/json
+
+###
+

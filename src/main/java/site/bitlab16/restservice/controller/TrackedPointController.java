@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @RestController
+@CrossOrigin
 public class TrackedPointController {
 
     private final TrackedPointService pointService;

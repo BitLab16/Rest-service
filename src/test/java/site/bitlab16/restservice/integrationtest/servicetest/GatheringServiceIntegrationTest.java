@@ -55,6 +55,7 @@ public class GatheringServiceIntegrationTest {
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
                 new Timestamp(1564216200000L),
+                10,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p2 = new Gathering(2L, new TrackedPoint(1L,
                 "Piazza dei signori",
@@ -62,12 +63,14 @@ public class GatheringServiceIntegrationTest {
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
                 new Timestamp(1564218000000L),
+                10,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p3 = new Gathering(3L, new TrackedPoint(1L,
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
+                10,
                 new Timestamp(1564221600000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p4 = new Gathering(4L, new TrackedPoint(1L,
@@ -75,6 +78,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
+                10,
                 new Timestamp(1564223400000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
 
@@ -94,6 +98,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
+                10
                 new Timestamp(1564216200000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p2 = new Gathering(2L, new TrackedPoint(1L,
@@ -101,6 +106,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
+                10,
                 new Timestamp(1564218000000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p3 = new Gathering(3L, new TrackedPoint(1L,
@@ -108,6 +114,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
+                10
                 new Timestamp(1564221600000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p4 = new Gathering(4L, new TrackedPoint(1L,
@@ -115,6 +122,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
+                10
                 new Timestamp(1564223400000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
 

@@ -12,9 +12,10 @@ public class Gathering {
     @Column(
             name = "id"
     )
+    @GeneratedValue(strategy=GenerationType.TABLE)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "tracked_point_id", nullable = false)
     private TrackedPoint point;
 
@@ -47,7 +48,15 @@ public class Gathering {
     @Column(name = "attractions_index")
     private Long attractionIndex;
 
-    public Gathering(Long id, TrackedPoint point, Timestamp detectionTime, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionIndex) {
+    public Gathering(Long id,
+                     TrackedPoint point,
+                     Timestamp detectionTime,
+                     Season season,
+                     boolean isHoliday,
+                     Long timeIndex,
+                     Long weatherIndex,
+                     Long seasonIndex,
+                     Long attractionIndex) {
         this.id = id;
         this.point = point;
         this.detectionTime = detectionTime;

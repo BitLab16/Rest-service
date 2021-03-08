@@ -1,6 +1,12 @@
 package site.bitlab16.restservice.model;
 
-import org.springframework.data.geo.Point;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
+import org.n52.jackson.datatype.jts.GeometryDeserializer;
+import org.n52.jackson.datatype.jts.GeometrySerializer;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,6 +16,7 @@ import java.util.Objects;
 public class TrackedPoint {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.TABLE)
     private Long id;
 
     @Column(name = "point_name")
@@ -22,6 +29,8 @@ public class TrackedPoint {
     private String description;
 
     @Column(name = "location")
+    @JsonSerialize(using = GeometrySerializer.class)
+    @JsonDeserialize(contentUsing = GeometryDeserializer.class)
     private Point location;
 
     public TrackedPoint() {}

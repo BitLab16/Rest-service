@@ -12,16 +12,13 @@ import java.util.Optional;
 @Repository
 public interface TrackedPointRepository extends JpaRepository<TrackedPoint, Long>{
 
-    @Query(value = "WITH summary AS (\n" +
-            "    SELECT t.id,\n" +
-            "           t.code,\n" +
-            "           t.point_name,\n" +
-            "           t.description, \n" +
-            "           t.location \n" +
-            "    FROM tracked_point t)\n" +
-            "SELECT s.*\n" +
-            "FROM summary s\n" +
-            "WHERE s.id = :id", nativeQuery = true)
+    @Query(value = """
+            WITH summary AS (
+                SELECT *
+                FROM tracked_point t)
+            SELECT s.*
+            FROM summary s
+            WHERE s.id = :id""", nativeQuery = true)
     @Override
     Optional<TrackedPoint> findById(@Param("id") Long id);
 }

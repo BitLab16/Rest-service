@@ -6,31 +6,45 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import site.bitlab16.restservice.model.Gathering;
 
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Collection;
 
 @Repository
 public interface GatheringRepository extends JpaRepository<Gathering, Long> {
 
     @Query(value = """
                 WITH summary AS (
-                    SELECT g.id,
-                       g.tracked_point_id,
-                       g.detection_time,
+                    SELECT *,
                        ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id
                            ORDER BY g.detection_time DESC) AS rk
-                    FROM gatherings_detection g)
+                    FROM gatherings_detection g
+                    WHERE g.detection_time < '2019-07-27 12:00:00.000000')
                 SELECT s.*
                 FROM summary s
                 WHERE s.rk = 1""", nativeQuery = true)
-    List<Gathering> findLastGatheringForAllPoint();
+    Collection<Gathering> findLastGatheringForAllPoint();
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_detection g
+                WHERE date_trunc('day', g.detection_time) = :day
+                GROUP BY date_trunc('day', g.detection_time)
+            """, nativeQuery = true)
+    Collection<Gathering> getPastDayGathering(Date day);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_prediction g
+                WHERE date_trunc('day', g.detection_time) = :day
+                GROUP BY date_trunc('day', g.detection_time)
+            """, nativeQuery = true)
+    Collection<Gathering> getFutureDayGathering(Date day);
 
     @Query(value = """
             WITH summary AS(
-                SELECT g.id, 
-                       g.tracked_point_id,
-                       g.detection_time,
-                       ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id)
+                SELECT *,
+                    ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id
                            ORDER BY g.detection_time DESC) as rk
                 FROM gatherings_detection g
                 WHERE g.detection_time < :time)
@@ -38,20 +52,18 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
             FROM summary s
             WHERE s.rk = 1
             """, nativeQuery = true)
-    List<Gathering> findPastGatherings(@Param("time") Timestamp time);
+    Collection<Gathering> findPastGatherings(@Param("time") Timestamp time);
 
     @Query(value = """
             WITH summary AS(
-                  SELECT g.id,\s
-                         g.tracked_point_id,
-                         g.detection_time,
-                         ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id)
-                             ORDER BY g.detection_time ASC) as rk
-                         FROM gatherings_prediction g
-                         WHERE g.detection_time > :time)
+                SELECT *,
+                    ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id
+                        ORDER BY g.detection_time ASC) as rk
+                FROM gatherings_prediction g
+                WHERE g.detection_time > :time)
             SELECT s.*
             FROM summary s
             WHERE s.rk = 1
             """, nativeQuery = true)
-    List<Gathering> findFutureGatherings(@Param("time") Timestamp time);
+    Collection<Gathering> findFutureGatherings(@Param("time") Timestamp time);
 }

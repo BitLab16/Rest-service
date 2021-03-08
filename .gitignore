@@ -1,6 +1,6 @@
 #Intellij project files
 .idea/
 *.iml
-
+.run/
 #Maven target directory
 target/

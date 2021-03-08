@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = { "http://localhost:8081", "http://localhost:8080" })
 public class TrackedPointController {
 
     private final TrackedPointService pointService;

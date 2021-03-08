@@ -89,7 +89,12 @@ public class TrackedPoint {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, code, description, location);
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + code.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + location.hashCode();
+        return result;
     }
 
     @Override

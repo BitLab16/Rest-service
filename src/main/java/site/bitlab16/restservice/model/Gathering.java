@@ -20,6 +20,12 @@ public class Gathering {
     private TrackedPoint point;
 
     @Column(
+            name = "people_concentration",
+            nullable = false
+    )
+    private int flow;
+
+    @Column(
             name = "detection_time",
             nullable = false)
     private Timestamp detectionTime;
@@ -50,6 +56,7 @@ public class Gathering {
 
     public Gathering(Long id,
                      TrackedPoint point,
+                     int flow,
                      Timestamp detectionTime,
                      Season season,
                      boolean isHoliday,
@@ -59,6 +66,7 @@ public class Gathering {
                      Long attractionIndex) {
         this.id = id;
         this.point = point;
+        this.flow = flow;
         this.detectionTime = detectionTime;
         this.season = season;
         this.isHoliday = isHoliday;
@@ -144,23 +152,48 @@ public class Gathering {
         this.attractionIndex = attractionIndex;
     }
 
+    public int getFlow() {
+        return flow;
+    }
+
+    public void setFlow(int flow) {
+        this.flow = flow;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Gathering gathering = (Gathering) o;
-        return isHoliday == gathering.isHoliday &&
-                id.equals(gathering.id) && point.equals(gathering.point) &&
-                detectionTime.equals(gathering.detectionTime) && season == gathering.season &&
-                Objects.equals(timeIndex, gathering.timeIndex) &&
-                Objects.equals(weatherIndex, gathering.weatherIndex) &&
-                Objects.equals(seasonIndex, gathering.seasonIndex) &&
-                Objects.equals(attractionIndex, gathering.attractionIndex);
+
+        if (flow != gathering.flow) return false;
+        if (isHoliday != gathering.isHoliday) return false;
+        if (!id.equals(gathering.id)) return false;
+        if (!point.equals(gathering.point)) return false;
+        if (!detectionTime.equals(gathering.detectionTime)) return false;
+        if (season != gathering.season) return false;
+        if (timeIndex != null ? !timeIndex.equals(gathering.timeIndex) : gathering.timeIndex != null) return false;
+        if (weatherIndex != null ? !weatherIndex.equals(gathering.weatherIndex) : gathering.weatherIndex != null)
+            return false;
+        if (seasonIndex != null ? !seasonIndex.equals(gathering.seasonIndex) : gathering.seasonIndex != null)
+            return false;
+        return attractionIndex != null ? attractionIndex.equals(gathering.attractionIndex) : gathering.attractionIndex == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, point, detectionTime, season, isHoliday, timeIndex, weatherIndex, seasonIndex, attractionIndex);
+        int result = id.hashCode();
+        result = 31 * result + point.hashCode();
+        result = 31 * result + flow;
+        result = 31 * result + detectionTime.hashCode();
+        result = 31 * result + season.hashCode();
+        result = 31 * result + (isHoliday ? 1 : 0);
+        result = 31 * result + (timeIndex != null ? timeIndex.hashCode() : 0);
+        result = 31 * result + (weatherIndex != null ? weatherIndex.hashCode() : 0);
+        result = 31 * result + (seasonIndex != null ? seasonIndex.hashCode() : 0);
+        result = 31 * result + (attractionIndex != null ? attractionIndex.hashCode() : 0);
+        return result;
     }
 
     @Override

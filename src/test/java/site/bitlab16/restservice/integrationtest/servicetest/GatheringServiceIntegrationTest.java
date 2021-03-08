@@ -98,7 +98,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
-                10
+                10,
                 new Timestamp(1564216200000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p2 = new Gathering(2L, new TrackedPoint(1L,
@@ -114,7 +114,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
-                10
+                10,
                 new Timestamp(1564221600000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p4 = new Gathering(4L, new TrackedPoint(1L,
@@ -122,7 +122,7 @@ public class GatheringServiceIntegrationTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30))),
-                10
+                10,
                 new Timestamp(1564223400000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
 

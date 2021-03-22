@@ -1,11 +1,16 @@
 package site.bitlab16.restservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonRootName;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "gatherings_detection")
+@JsonRootName(value = "gathering")
 public class Gathering {
 
     @Id
@@ -17,6 +22,7 @@ public class Gathering {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "tracked_point_id", nullable = false)
+    @JsonBackReference
     private TrackedPoint point;
 
     @Column(
@@ -34,24 +40,30 @@ public class Gathering {
             name = "season",
             nullable = false
     )
+    @JsonIgnore
     private Season season;
 
     @Column(
             name = "holiday",
             nullable = false
     )
+    @JsonIgnore
     private boolean isHoliday;
 
     @Column(name = "time_index")
+    @JsonIgnore
     private Long timeIndex;
 
     @Column(name = "weather_index")
+    @JsonIgnore
     private Long weatherIndex;
 
     @Column(name = "season_index")
+    @JsonIgnore
     private Long seasonIndex;
 
     @Column(name = "attractions_index")
+    @JsonIgnore
     private Long attractionIndex;
 
     public Gathering(Long id,

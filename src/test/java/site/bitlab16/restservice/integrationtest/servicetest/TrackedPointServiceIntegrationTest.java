@@ -20,6 +20,7 @@ import site.bitlab16.restservice.service.TrackedPointService;
 
 import org.locationtech.jts.geom.Point;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,17 +54,20 @@ public class TrackedPointServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)));
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList());
         var p2 = new TrackedPoint(2L,
                 "Piazza della frutta",
                 200L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)));
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList());
         var p3 = new TrackedPoint(3L,
                 "Prato della valle",
                 300L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)));
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList());
 
         Mockito.when(pointRepository.findAll()).thenReturn(Arrays.asList(p1, p2, p3));
         Mockito.when(pointRepository.findById(p1.getId())).thenReturn(java.util.Optional.of(p1));
@@ -76,17 +80,20 @@ public class TrackedPointServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)));
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList());
         var p2 = new TrackedPoint(2L,
                 "Piazza della frutta",
                 200L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)));
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList());
         var p3 = new TrackedPoint(3L,
                 "Prato della valle",
                 300L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)));
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList());
         List<TrackedPoint> points = pointService.findAll();
         verifyFindAllTrackedPointsIsCalledOnce();
         assertThat(points).hasSize(3).extracting(TrackedPoint::getName).contains(p1.getName(), p2.getName(), p3.getName());
@@ -105,7 +112,8 @@ public class TrackedPointServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)) /*new Point(-110, 30)*/))
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()))
                 .getName()).isEqualTo("Piazza dei signori");
         verifyFindByIdIsCalledOnce();
     }

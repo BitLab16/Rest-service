@@ -22,6 +22,7 @@ import site.bitlab16.restservice.service.GatheringService;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +54,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564216200000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -61,7 +63,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564218000000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -69,7 +72,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564221600000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -77,7 +81,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564223400000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -97,7 +102,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564216200000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -105,7 +111,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564218000000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -113,7 +120,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564221600000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -121,7 +129,8 @@ public class GatheringServiceIntegrationTest {
                 "Piazza dei signori",
                 100L,
                 "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+                factory.createPoint(new Coordinate( -110, 30)),
+                Collections.emptyList()),
                 10,
                 new Timestamp(1564223400000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);

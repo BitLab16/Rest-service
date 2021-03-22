@@ -1,9 +1,11 @@
 package site.bitlab16.restservice.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.web.bind.annotation.*;
 import site.bitlab16.restservice.exception.PointNotFoundException;
 import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.TrackedPoint;
+import site.bitlab16.restservice.model.jackson_view.View;
 import site.bitlab16.restservice.service.GatheringService;
 import site.bitlab16.restservice.service.TrackedPointService;
 
@@ -25,6 +27,7 @@ public class TrackedPointController {
         this.gatheringService = gatheringService;
     }
 
+    @JsonView(View.Summary.class)
     @GetMapping(value= "/points")
     Collection<Gathering> getCurrentDayGatheringDetected() {
         return gatheringService.dayGathering(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));

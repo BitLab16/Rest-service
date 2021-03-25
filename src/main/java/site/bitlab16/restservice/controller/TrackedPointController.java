@@ -29,10 +29,11 @@ public class TrackedPointController {
 
     @JsonView(View.Summary.class)
     @GetMapping(value= "/points")
-    Collection<Gathering> getCurrentDayGatheringDetected() {
-        return gatheringService.dayGathering(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
+    Collection<TrackedPoint> getCurrentDayGatheringDetected() {
+        return pointService.dayGathering(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
     }
 
+    @JsonView(View.Summary.class)
     @GetMapping(value = "/point/{id}")
     TrackedPoint pointDetailsBasedOnId(@PathVariable("id") Long id) {
         return pointService.findById(id)
@@ -40,15 +41,16 @@ public class TrackedPointController {
     }
 
     @GetMapping(value = "/point/time/{time}")
-    Collection<Gathering> getSingleGatheringBasedOnTimePassed(@PathVariable("time") Date time){
+    Collection<TrackedPoint> getSingleGatheringBasedOnTimePassed(@PathVariable("time") Date time){
         if(time.after(currTime))
-            return gatheringService.futureData(new Timestamp(time.getTime()));
+            return pointService.futureData(new Timestamp(time.getTime()));
         else
-            return gatheringService.pastData(new Timestamp(time.getTime()));
+            return pointService.pastData(new Timestamp(time.getTime()));
     }
 
+    @JsonView(View.Summary.class)
     @GetMapping(value = "/points/time/{time}")
-    Collection<Gathering> getMultipleGatheringBasedOnTimePassed(@PathVariable("time") Date time){
-        return gatheringService.dayGathering(time);
+    Collection<TrackedPoint> getMultipleGatheringBasedOnTimePassed(@PathVariable("time") Date time){
+        return pointService.dayGathering(time);
     }
 }

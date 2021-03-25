@@ -1,8 +1,6 @@
 package site.bitlab16.restservice.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +9,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "gatherings_detection")
 @JsonRootName(value = "gathering")
+/*@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")*/
 public class Gathering {
 
     @Id
@@ -20,9 +21,9 @@ public class Gathering {
     @GeneratedValue(strategy=GenerationType.TABLE)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tracked_point_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private TrackedPoint point;
 
     @Column(
@@ -105,7 +106,9 @@ public class Gathering {
     }
 
     public void setPoint(TrackedPoint point) {
+        point.removeGatherings(this);
         this.point = point;
+        this.point.addGatherings(this);
     }
 
     public Timestamp getDetectionTime() {
@@ -175,7 +178,7 @@ public class Gathering {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Gathering)) return false;
 
         Gathering gathering = (Gathering) o;
 
@@ -185,12 +188,12 @@ public class Gathering {
         if (!point.equals(gathering.point)) return false;
         if (!detectionTime.equals(gathering.detectionTime)) return false;
         if (season != gathering.season) return false;
-        if (timeIndex != null ? !timeIndex.equals(gathering.timeIndex) : gathering.timeIndex != null) return false;
-        if (weatherIndex != null ? !weatherIndex.equals(gathering.weatherIndex) : gathering.weatherIndex != null)
+        if (!Objects.equals(timeIndex, gathering.timeIndex)) return false;
+        if (!Objects.equals(weatherIndex, gathering.weatherIndex))
             return false;
-        if (seasonIndex != null ? !seasonIndex.equals(gathering.seasonIndex) : gathering.seasonIndex != null)
+        if (!Objects.equals(seasonIndex, gathering.seasonIndex))
             return false;
-        return attractionIndex != null ? attractionIndex.equals(gathering.attractionIndex) : gathering.attractionIndex == null;
+        return Objects.equals(attractionIndex, gathering.attractionIndex);
     }
 
     @Override

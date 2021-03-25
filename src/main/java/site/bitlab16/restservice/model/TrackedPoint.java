@@ -1,22 +1,26 @@
 package site.bitlab16.restservice.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 import org.n52.jackson.datatype.jts.GeometryDeserializer;
 import org.n52.jackson.datatype.jts.GeometrySerializer;
 import site.bitlab16.restservice.model.jackson_view.View;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "tracked_point")
+@JsonRootName(value = "tracked_point")
+/*@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")*/
 public class TrackedPoint {
 
     @Id
@@ -40,10 +44,9 @@ public class TrackedPoint {
     @JsonView(View.Summary.class)
     private Point location;
 
-    @OneToMany(mappedBy = "point")
+    @OneToMany(targetEntity=Gathering.class, mappedBy = "point", fetch= FetchType.EAGER)
     @JsonView(View.Summary.class)
-    //@JsonManagedReference
-    private List<Gathering> gatherings;
+    private Collection<Gathering> gatherings = new ArrayList<>();
 
     public TrackedPoint() {}
 
@@ -56,7 +59,18 @@ public class TrackedPoint {
         this.gatherings = gatherings;
     }
 
-    public List<Gathering> getGatherings() {
+    public void addGatherings(Gathering gathering) {
+        gatherings.add(gathering);
+        gathering.setPoint(this);
+    }
+
+    public void removeGatherings(Gathering gathering) {
+        gatherings.remove(gathering);
+        gathering.setPoint(null);
+    }
+
+
+    public Collection<Gathering> getGatherings() {
         return gatherings;
     }
 

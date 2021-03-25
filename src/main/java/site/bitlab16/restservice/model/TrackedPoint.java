@@ -16,7 +16,7 @@ import java.util.Objects;
 public class TrackedPoint {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "point_name")

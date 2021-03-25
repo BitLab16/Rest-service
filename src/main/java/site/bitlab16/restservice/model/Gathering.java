@@ -12,7 +12,7 @@ public class Gathering {
     @Column(
             name = "id"
     )
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

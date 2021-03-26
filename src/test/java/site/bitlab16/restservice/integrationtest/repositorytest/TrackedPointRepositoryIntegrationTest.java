@@ -28,11 +28,11 @@ public class TrackedPointRepositoryIntegrationTest {
     @Test
     public void whenFindById_thenTrackedPointWithThatIdShouldBeReturned(){
         GeometryFactory factory = new GeometryFactory();
-        var p1 = new TrackedPoint(1L,
-                "Piazza della frutta",
-                200L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30)));
+        var p1 = new TrackedPoint();
+        p1.setName("Piazza della frutta");
+        p1.setCode(200L);
+        p1.setDescription("Una delle piazze più importanti di padova");
+        p1.setLocation(factory.createPoint(new Coordinate(-110, 30)));
 
         entityManager.persist(p1);
         entityManager.flush();

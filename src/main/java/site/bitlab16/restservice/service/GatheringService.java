@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -18,14 +20,20 @@ public class GatheringService {
     private GatheringRepository repository;
 
     public Collection<Gathering> dayGathering(Date date) {
-        Collection<Gathering> result = repository.getPastDayGathering(date);
+        var past = repository.getPastDayGathering(date);
         var future = repository.getFutureDayGathering(date);
-        try {
-            result.addAll(future);
-        } catch (UnsupportedOperationException e) {
-            result = new ArrayList<>(result);
-            result.addAll(future);
-        }
+        List<Gathering> result = new ArrayList<>(past.size() + future.size());
+        result.addAll(past);
+        result.addAll(future);
+        return result;
+    }
+
+    public Collection<Gathering> dayGathering(Long id, Date date) {
+        var past = repository.getPastDayGathering(id, date);
+        var future = repository.getFutureDayGathering(id, date);
+        List<Gathering> result = new ArrayList<>(past.size() + future.size());
+        result.addAll(past);
+        result.addAll(future);
         return result;
     }
 
@@ -34,4 +42,5 @@ public class GatheringService {
     public Collection<Gathering> pastData(Timestamp time) {return repository.findPastGatherings(time);}
 
     public Collection<Gathering> futureData(Timestamp time) {return repository.findFutureGatherings(time);}
+
 }

@@ -40,6 +40,22 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
     Collection<Gathering> getFutureDayGathering(Date day);
 
     @Query(value = """
+                SELECT *
+                FROM gatherings_detection g
+                WHERE date_trunc('day', g.detection_time) = :day
+                    and g.tracked_point_id = :id
+            """, nativeQuery = true)
+    Collection<Gathering> getPastDayGathering(Long id, Date day);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_prediction g
+                WHERE date_trunc('day', g.detection_time) = :day
+                    and g.tracked_point_id = :id
+            """, nativeQuery = true)
+    Collection<Gathering> getFutureDayGathering(Long id, Date day);
+
+    @Query(value = """
             WITH summary AS(
                 SELECT *,
                     ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id

@@ -9,6 +9,7 @@ import org.n52.jackson.datatype.jts.GeometrySerializer;
 import site.bitlab16.restservice.model.jackson_view.View;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,13 +19,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "tracked_point")
 @JsonRootName(value = "tracked_point")
-/*@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")*/
-public class TrackedPoint {
+public class TrackedPoint implements Serializable {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @Column(name = "point_name")
@@ -44,33 +42,49 @@ public class TrackedPoint {
     @JsonView(View.Summary.class)
     private Point location;
 
-    @OneToMany(targetEntity=Gathering.class, mappedBy = "point", fetch= FetchType.EAGER)
     @JsonView(View.Summary.class)
-    private Collection<Gathering> gatherings = new ArrayList<>();
+    @Transient
+    private List<Gathering> gatherings = new ArrayList<Gathering>();
 
     public TrackedPoint() {}
 
-    public TrackedPoint(Long id, String name, Long code, String description, Point location, List<Gathering> gatherings) {
+    public TrackedPoint(Long id,
+                        String name,
+                        Long code,
+                        String description,
+                        Point location,
+                        List<Gathering> gatherings) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.description = description;
         this.location = location;
-        this.gatherings = gatherings;
+        addGatherings(gatherings);
     }
 
-    public void addGatherings(Gathering gathering) {
-        gatherings.add(gathering);
-        gathering.setPoint(this);
+    public TrackedPoint(Long id, String name, Long code, String description, Point location) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+        this.description = description;
+        this.location = location;
+    }
+
+    public void addGatherings(List<Gathering> gatherings) {
+        try {
+            this.gatherings.addAll(gatherings);
+        } catch (UnsupportedOperationException ex) {
+            System.out.println(this.gatherings.getClass());
+            ex.printStackTrace();
+        }
     }
 
     public void removeGatherings(Gathering gathering) {
-        gatherings.remove(gathering);
-        gathering.setPoint(null);
+        this.gatherings.remove(gathering);
     }
 
 
-    public Collection<Gathering> getGatherings() {
+    public List<Gathering> getGatherings() {
         return gatherings;
     }
 

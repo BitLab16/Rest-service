@@ -1,40 +1,44 @@
 package site.bitlab16.restservice.model;
 
 import com.fasterxml.jackson.annotation.*;
+import site.bitlab16.restservice.model.jackson_view.View;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "gatherings_detection")
 @JsonRootName(value = "gathering")
-/*@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")*/
-public class Gathering {
+public class Gathering implements Serializable {
 
     @Id
     @Column(
             name = "id"
     )
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @JsonView(View.Summary.class)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tracked_point_id", nullable = false)
-    @JsonIgnore
-    private TrackedPoint point;
+    @Column(
+            name = "tracked_point_id",
+            nullable = false
+    )
+    private Long point;
+
 
     @Column(
             name = "people_concentration",
             nullable = false
     )
+    @JsonView(View.Summary.class)
     private int flow;
 
     @Column(
             name = "detection_time",
             nullable = false)
+    @JsonView(View.Summary.class)
     private Timestamp detectionTime;
 
     @Column(
@@ -68,7 +72,7 @@ public class Gathering {
     private Long attractionIndex;
 
     public Gathering(Long id,
-                     TrackedPoint point,
+                     Long point,
                      int flow,
                      Timestamp detectionTime,
                      Season season,
@@ -89,9 +93,7 @@ public class Gathering {
         this.attractionIndex = attractionIndex;
     }
 
-    public Gathering() {
-
-    }
+    public Gathering() { }
 
     public Long getId() {
         return id;
@@ -101,14 +103,12 @@ public class Gathering {
         this.id = id;
     }
 
-    public TrackedPoint getPoint() {
+    public Long getPoint() {
         return point;
     }
 
-    public void setPoint(TrackedPoint point) {
-        point.removeGatherings(this);
+    public void setPoint(Long point) {
         this.point = point;
-        this.point.addGatherings(this);
     }
 
     public Timestamp getDetectionTime() {
@@ -185,7 +185,7 @@ public class Gathering {
         if (flow != gathering.flow) return false;
         if (isHoliday != gathering.isHoliday) return false;
         if (!id.equals(gathering.id)) return false;
-        if (!point.equals(gathering.point)) return false;
+        //if (!point.equals(gathering.point)) return false;
         if (!detectionTime.equals(gathering.detectionTime)) return false;
         if (season != gathering.season) return false;
         if (!Objects.equals(timeIndex, gathering.timeIndex)) return false;

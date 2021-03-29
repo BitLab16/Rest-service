@@ -22,6 +22,7 @@ import site.bitlab16.restservice.service.GatheringService;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,35 +50,19 @@ public class GatheringServiceIntegrationTest {
     @BeforeEach
     public void setUpDB() {
         GeometryFactory factory = new GeometryFactory();
-        var p1 = new Gathering(1L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p1 = new Gathering(1L, 1L,
                 10,
                 new Timestamp(1564216200000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p2 = new Gathering(2L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p2 = new Gathering(2L, 1L,
                 10,
                 new Timestamp(1564218000000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p3 = new Gathering(3L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p3 = new Gathering(3L, 1L,
                 10,
                 new Timestamp(1564221600000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p4 = new Gathering(4L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p4 = new Gathering(4L, 1L,
                 10,
                 new Timestamp(1564223400000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
@@ -93,35 +78,19 @@ public class GatheringServiceIntegrationTest {
     @Test
     public void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
         GeometryFactory factory = new GeometryFactory();
-        var p1 = new Gathering(1L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p1 = new Gathering(1L, 1L,
                 10,
                 new Timestamp(1564216200000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p2 = new Gathering(2L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p2 = new Gathering(2L, 1L,
                 10,
                 new Timestamp(1564218000000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p3 = new Gathering(3L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p3 = new Gathering(3L, 1L,
                 10,
                 new Timestamp(1564221600000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p4 = new Gathering(4L, new TrackedPoint(1L,
-                "Piazza dei signori",
-                100L,
-                "Una delle piazze più importati di padova",
-                factory.createPoint(new Coordinate( -110, 30))),
+        var p4 = new Gathering(4L, 1L,
                 10,
                 new Timestamp(1564223400000L),
                 Season.SPRING, false, 0L, 0L, 0L,0L);

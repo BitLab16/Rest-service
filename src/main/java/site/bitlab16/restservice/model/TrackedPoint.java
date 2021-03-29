@@ -1,28 +1,36 @@
 package site.bitlab16.restservice.model;
 
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 import org.n52.jackson.datatype.jts.GeometryDeserializer;
 import org.n52.jackson.datatype.jts.GeometrySerializer;
+import site.bitlab16.restservice.model.jackson_view.View;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "tracked_point")
-public class TrackedPoint {
+@JsonRootName(value = "tracked_point")
+public class TrackedPoint implements Serializable {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @Column(name = "point_name")
+    @JsonView(View.Summary.class)
     private String name;
 
     @Column(name = "code")
+    @JsonView(View.Summary.class)
     private Long code;
 
     @Column(name = "description")
@@ -31,9 +39,28 @@ public class TrackedPoint {
     @Column(name = "location")
     @JsonSerialize(using = GeometrySerializer.class)
     @JsonDeserialize(contentUsing = GeometryDeserializer.class)
+    @JsonView(View.Summary.class)
     private Point location;
 
+    @JsonView(View.Summary.class)
+    @Transient
+    private List<Gathering> gatherings = new ArrayList<Gathering>();
+
     public TrackedPoint() {}
+
+    public TrackedPoint(Long id,
+                        String name,
+                        Long code,
+                        String description,
+                        Point location,
+                        List<Gathering> gatherings) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+        this.description = description;
+        this.location = location;
+        addGatherings(gatherings);
+    }
 
     public TrackedPoint(Long id, String name, Long code, String description, Point location) {
         this.id = id;
@@ -41,6 +68,28 @@ public class TrackedPoint {
         this.code = code;
         this.description = description;
         this.location = location;
+    }
+
+    public void addGatherings(List<Gathering> gatherings) {
+        try {
+            this.gatherings.addAll(gatherings);
+        } catch (UnsupportedOperationException ex) {
+            System.out.println(this.gatherings.getClass());
+            ex.printStackTrace();
+        }
+    }
+
+    public void removeGatherings(Gathering gathering) {
+        this.gatherings.remove(gathering);
+    }
+
+
+    public List<Gathering> getGatherings() {
+        return gatherings;
+    }
+
+    public void setGatherings(List<Gathering> gatherings) {
+        this.gatherings = gatherings;
     }
 
     public Long getId() {
@@ -82,18 +131,26 @@ public class TrackedPoint {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof TrackedPoint)) return false;
+
         TrackedPoint that = (TrackedPoint) o;
-        return id.equals(that.id) && name.equals(that.name) && code.equals(that.code) && Objects.equals(description, that.description) && location.equals(that.location);
+
+        if (!id.equals(that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!code.equals(that.code)) return false;
+        if (!Objects.equals(description, that.description)) return false;
+        if (!location.equals(that.location)) return false;
+        return Objects.equals(gatherings, that.gatherings);
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + name.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + code.hashCode();
-        result = 31 * result + description.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + location.hashCode();
+        result = 31 * result + (gatherings != null ? gatherings.hashCode() : 0);
         return result;
     }
 
@@ -104,7 +161,8 @@ public class TrackedPoint {
                 ", name='" + name + '\'' +
                 ", code=" + code +
                 ", description='" + description + '\'' +
-                ", location='" + location.toString() + '\'' +
+                ", location=" + location +
+                ", gatherings=" + gatherings +
                 '}';
     }
 }

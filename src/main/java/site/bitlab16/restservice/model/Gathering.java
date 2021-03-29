@@ -1,61 +1,78 @@
 package site.bitlab16.restservice.model;
 
+import com.fasterxml.jackson.annotation.*;
+import site.bitlab16.restservice.model.jackson_view.View;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "gatherings_detection")
-public class Gathering {
+@JsonRootName(value = "gathering")
+public class Gathering implements Serializable {
 
     @Id
     @Column(
             name = "id"
     )
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @JsonView(View.Summary.class)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "tracked_point_id", nullable = false)
-    private TrackedPoint point;
+    @Column(
+            name = "tracked_point_id",
+            nullable = false
+    )
+    private Long point;
+
 
     @Column(
             name = "people_concentration",
             nullable = false
     )
+    @JsonView(View.Summary.class)
     private int flow;
 
     @Column(
             name = "detection_time",
             nullable = false)
+    @JsonView(View.Summary.class)
     private Timestamp detectionTime;
 
     @Column(
             name = "season",
             nullable = false
     )
+    @JsonIgnore
     private Season season;
 
     @Column(
             name = "holiday",
             nullable = false
     )
+    @JsonIgnore
     private boolean isHoliday;
 
     @Column(name = "time_index")
+    @JsonIgnore
     private Long timeIndex;
 
     @Column(name = "weather_index")
+    @JsonIgnore
     private Long weatherIndex;
 
     @Column(name = "season_index")
+    @JsonIgnore
     private Long seasonIndex;
 
     @Column(name = "attractions_index")
+    @JsonIgnore
     private Long attractionIndex;
 
     public Gathering(Long id,
-                     TrackedPoint point,
+                     Long point,
                      int flow,
                      Timestamp detectionTime,
                      Season season,
@@ -76,9 +93,7 @@ public class Gathering {
         this.attractionIndex = attractionIndex;
     }
 
-    public Gathering() {
-
-    }
+    public Gathering() { }
 
     public Long getId() {
         return id;
@@ -88,11 +103,11 @@ public class Gathering {
         this.id = id;
     }
 
-    public TrackedPoint getPoint() {
+    public Long getPoint() {
         return point;
     }
 
-    public void setPoint(TrackedPoint point) {
+    public void setPoint(Long point) {
         this.point = point;
     }
 
@@ -163,22 +178,22 @@ public class Gathering {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Gathering)) return false;
 
         Gathering gathering = (Gathering) o;
 
         if (flow != gathering.flow) return false;
         if (isHoliday != gathering.isHoliday) return false;
         if (!id.equals(gathering.id)) return false;
-        if (!point.equals(gathering.point)) return false;
+        //if (!point.equals(gathering.point)) return false;
         if (!detectionTime.equals(gathering.detectionTime)) return false;
         if (season != gathering.season) return false;
-        if (timeIndex != null ? !timeIndex.equals(gathering.timeIndex) : gathering.timeIndex != null) return false;
-        if (weatherIndex != null ? !weatherIndex.equals(gathering.weatherIndex) : gathering.weatherIndex != null)
+        if (!Objects.equals(timeIndex, gathering.timeIndex)) return false;
+        if (!Objects.equals(weatherIndex, gathering.weatherIndex))
             return false;
-        if (seasonIndex != null ? !seasonIndex.equals(gathering.seasonIndex) : gathering.seasonIndex != null)
+        if (!Objects.equals(seasonIndex, gathering.seasonIndex))
             return false;
-        return attractionIndex != null ? attractionIndex.equals(gathering.attractionIndex) : gathering.attractionIndex == null;
+        return Objects.equals(attractionIndex, gathering.attractionIndex);
     }
 
     @Override

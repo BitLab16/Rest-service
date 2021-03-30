@@ -2,10 +2,14 @@ package site.bitlab16.restservice.integrationtest.servicetest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,27 +32,17 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class GatheringServiceIntegrationTest {
 
-    @TestConfiguration
-    static class GatheringServiceTestContextConfiguration {
-
-        @Bean
-        public GatheringService pointService() {
-            return new GatheringService();
-        }
-    }
-
-    @Autowired
-    @Qualifier("gatheringService")
+    @InjectMocks
     private GatheringService gatheringService;
 
-    @MockBean
+    @Mock
     private GatheringRepository gatheringRepository;
 
-    @BeforeEach
-    public void setUpDB() {
+    @Test
+    public void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
@@ -73,27 +67,6 @@ public class GatheringServiceIntegrationTest {
         Mockito.when(gatheringRepository.getFutureDayGathering(
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
                 .thenReturn(List.of(p4));
-    }
-
-    @Test
-    public void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
-        GeometryFactory factory = new GeometryFactory();
-        var p1 = new Gathering(1L, 1L,
-                10,
-                new Timestamp(1564216200000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p2 = new Gathering(2L, 1L,
-                10,
-                new Timestamp(1564218000000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p3 = new Gathering(3L, 1L,
-                10,
-                new Timestamp(1564221600000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
-        var p4 = new Gathering(4L, 1L,
-                10,
-                new Timestamp(1564223400000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
 
         Collection<Gathering> gatherings = gatheringService.dayGathering(
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate()));

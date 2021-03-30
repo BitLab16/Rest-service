@@ -13,16 +13,19 @@ import java.util.stream.Collectors;
 @Service
 public class TrackedPointService {
 
-    @Autowired
     private TrackedPointRepository trackedPointRepository;
 
-    @Autowired
     private GatheringService gatheringService;
+
+    public TrackedPointService(TrackedPointRepository trackedPointRepository, GatheringService gatheringService) {
+        this.trackedPointRepository = trackedPointRepository;
+        this.gatheringService = gatheringService;
+    }
 
     public Optional<TrackedPoint> findById(Long id, Date date) {
         Optional<TrackedPoint> t = trackedPointRepository.findById(id);
         t.ifPresent(trackedPoint -> {
-            var gatherings = gatheringService.dayGathering(date);
+            var gatherings = gatheringService.dayGathering(id, date);
             trackedPoint.addGatherings(new ArrayList<>(gatherings));
         });
         return t;

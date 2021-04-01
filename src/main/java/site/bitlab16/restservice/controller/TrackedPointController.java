@@ -33,9 +33,9 @@ public class TrackedPointController {
 
     @JsonView(View.Summary.class)
     @GetMapping(value = "/point/{id}")
-    TrackedPoint pointDetailsBasedOnId(@PathVariable("id") Long id) {
-        return pointService.findById(id, Date.valueOf(currTime.toLocalDateTime().toLocalDate()))
-                .orElseThrow(() -> new PointNotFoundException(id));
+    TrackedPoint pointDetailsBasedOnId(@PathVariable("id") Long code) {
+        return pointService.findByCode(code, Date.valueOf(currTime.toLocalDateTime().toLocalDate()))
+                .orElseThrow(() -> new PointNotFoundException(code));
     }
 
     @JsonView(View.Summary.class)

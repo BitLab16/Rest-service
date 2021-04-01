@@ -56,6 +56,21 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
     Collection<Gathering> getFutureDayGathering(Long id, Date day);
 
     @Query(value = """
+                SELECT *
+                FROM gatherings_detection g
+                WHERE g.detection_time < :date - INTERVAL '1 year'
+            """, nativeQuery = true)
+    Collection<Gathering> getYearGatheringFromDate(Date date);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_detection g
+                WHERE g.detection_time < :date - INTERVAL '1 year'
+                    and g.tracked_point_id = :id
+            """, nativeQuery = true)
+    Collection<Gathering> getYearGatheringFromDate(Long id, Date date);
+
+    @Query(value = """
             WITH summary AS(
                 SELECT *,
                     ROW_NUMBER() OVER(PARTITION BY g.tracked_point_id

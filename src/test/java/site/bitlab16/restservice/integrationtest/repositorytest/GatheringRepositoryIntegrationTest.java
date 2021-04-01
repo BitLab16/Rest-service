@@ -44,7 +44,7 @@ public class GatheringRepositoryIntegrationTest {
          p2.setLocation(factory.createPoint(new Coordinate(-110, 30)));
 
          var g1 = new Gathering();
-         g1.setPoint(p1);
+         g1.setPoint(1L);
          g1.setFlow(10);
          g1.setDetectionTime(new Timestamp(1464243600000L));
          g1.setSeason(Season.SPRING);
@@ -54,7 +54,7 @@ public class GatheringRepositoryIntegrationTest {
          g1.setSeasonIndex(0L);
          g1.setAttractionIndex(0L);
          var g2 = new Gathering();
-         g2.setPoint(p1);
+         g2.setPoint(1L);
          g2.setFlow(10);
          g2.setDetectionTime(new Timestamp(1464243500000L));
          g2.setSeason(Season.SPRING);
@@ -64,7 +64,7 @@ public class GatheringRepositoryIntegrationTest {
          g2.setSeasonIndex(0L);
          g2.setAttractionIndex(0L);
          var g3 = new Gathering();
-         g3.setPoint(p2);
+         g3.setPoint(2L);
          g3.setFlow(10);
          g3.setDetectionTime(new Timestamp(1464243500000L));
          g3.setSeason(Season.SPRING);
@@ -104,7 +104,7 @@ public class GatheringRepositoryIntegrationTest {
         p2.setLocation(factory.createPoint(new Coordinate(-110, 30)));
 
         var g1 = new Gathering();
-        g1.setPoint(p1);
+        g1.setPoint(1L);
         g1.setFlow(10);
         g1.setDetectionTime(new Timestamp(1464243500000L));
         g1.setSeason(Season.SPRING);
@@ -114,7 +114,7 @@ public class GatheringRepositoryIntegrationTest {
         g1.setSeasonIndex(0L);
         g1.setAttractionIndex(0L);
         var g2 = new Gathering();
-        g2.setPoint(p2);
+        g2.setPoint(2L);
         g2.setFlow(10);
         g2.setDetectionTime(new Timestamp(1464243500000L));
         g2.setSeason(Season.SPRING);
@@ -154,7 +154,7 @@ public class GatheringRepositoryIntegrationTest {
         p2.setLocation(factory.createPoint(new Coordinate(-110, 30)));
 
         var g1 = new Gathering();
-        g1.setPoint(p1);
+        g1.setPoint(1L);
         g1.setFlow(10);
         g1.setDetectionTime(new Timestamp(11564243500000L));
         g1.setSeason(Season.SPRING);
@@ -164,7 +164,7 @@ public class GatheringRepositoryIntegrationTest {
         g1.setSeasonIndex(0L);
         g1.setAttractionIndex(0L);
         var g2 = new Gathering();
-        g2.setPoint(p2);
+        g2.setPoint(2L);
         g2.setFlow(10);
         g2.setDetectionTime(new Timestamp(11564243500000L));
         g2.setSeason(Season.SPRING);
@@ -202,7 +202,7 @@ public class GatheringRepositoryIntegrationTest {
         p2.setLocation(factory.createPoint(new Coordinate(-110, 30)));
 
         var g1 = new Gathering();
-        g1.setPoint(p1);
+        g1.setPoint(1L);
         g1.setFlow(10);
         g1.setDetectionTime(new Timestamp(1364243500000L));
         g1.setSeason(Season.SPRING);
@@ -212,7 +212,7 @@ public class GatheringRepositoryIntegrationTest {
         g1.setSeasonIndex(0L);
         g1.setAttractionIndex(0L);
         var g2 = new Gathering();
-        g2.setPoint(p2);
+        g2.setPoint(2L);
         g2.setFlow(10);
         g2.setDetectionTime(new Timestamp(1364243500000L));
         g2.setSeason(Season.SPRING);

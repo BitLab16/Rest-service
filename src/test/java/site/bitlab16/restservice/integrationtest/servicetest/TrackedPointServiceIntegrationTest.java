@@ -76,7 +76,7 @@ public class TrackedPointServiceIntegrationTest {
                 1L, 8, new Timestamp(1564223399999L), Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         Mockito.when(pointRepository.findByCode(100L)).thenReturn(java.util.Optional.of(p1));
-        Mockito.when(gatheringServiceMock.dayGathering(1L,
+        Mockito.when(gatheringServiceMock.yearGatheringFromDate(1L,
                 Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate())))
                 .thenReturn(Arrays.asList(g1, g2, g3, g4));
         Date date = Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate());

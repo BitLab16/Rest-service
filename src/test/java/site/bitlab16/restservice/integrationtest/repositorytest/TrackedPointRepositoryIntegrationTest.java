@@ -26,7 +26,7 @@ public class TrackedPointRepositoryIntegrationTest {
     private TrackedPointRepository pointRepository;
 
     @Test
-    public void whenFindById_thenTrackedPointWithThatIdShouldBeReturned(){
+    public void whenFindByCode_thenTrackedPointWithThatCodeShouldBeReturned(){
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint();
         p1.setName("Piazza della frutta");
@@ -37,8 +37,8 @@ public class TrackedPointRepositoryIntegrationTest {
         entityManager.persist(p1);
         entityManager.flush();
 
-        Optional<TrackedPoint> found = pointRepository.findById(1L);
+        Optional<TrackedPoint> found = pointRepository.findByCode(200L);
 
-        assertThat(found.get().getId()).isEqualTo(1L);
+        assertThat(found.get().getCode()).isEqualTo(200L);
     }
 }

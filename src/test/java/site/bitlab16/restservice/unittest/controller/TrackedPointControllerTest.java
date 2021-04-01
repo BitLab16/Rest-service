@@ -43,12 +43,9 @@ public class TrackedPointControllerTest {
     @MockBean
     private TrackedPointService pointService;
 
-    @MockBean
-    private GatheringService gatheringService;
-
     @Before
     public void setup() {
-        this.mvc = MockMvcBuilders.standaloneSetup(new TrackedPointController(pointService, gatheringService)).build();
+        this.mvc = MockMvcBuilders.standaloneSetup(new TrackedPointController(pointService)).build();
     }
 
 
@@ -61,14 +58,9 @@ public class TrackedPointControllerTest {
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30)));
 
+        Date date = Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate());
 
-        var g2 = new Gathering(2L, p2, 10, new Timestamp(1564243500000L),
-                Season.SPRING, false, 0L, 0L, 0L, 0L);
-
-
-        Mockito.when(pointService.findById(p2.getId())).thenReturn(java.util.Optional.of(p2));
-        Mockito.when(gatheringService.futureData(anyObject())).thenReturn(Arrays.asList(g2));
-
+        Mockito.when(pointService.findByCode(p2.getCode(), date)).thenReturn(java.util.Optional.of(p2));
     }
 
     @Test
@@ -79,21 +71,19 @@ public class TrackedPointControllerTest {
                 300L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30)));
-        var g3 = new Gathering(3L, p3, 10, new Timestamp(1564223400000L),
-                Season.SPRING, false, 0L, 0L, 0L, 0L);
 
-        Mockito.when(gatheringService.dayGathering(anyObject())).thenReturn(Arrays.asList(g3));
+        Mockito.when(pointService.dayGathering(anyObject())).thenReturn(Arrays.asList(p3));
 
         mvc.perform(get("/points")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(3L));
+                .andExpect(jsonPath("$[0].name").value("Prato della valle"));
     }
 
     @Test
-    public void whenValidId_pointShouldReturnRightPoint() throws Exception{
-        mvc.perform(get("/point/{id}", 2L)
+    public void whenValidCode_pointShouldReturnRightPoint() throws Exception{
+        mvc.perform(get("/point/{id}", 200L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", isA(LinkedHashMap.class)));
@@ -114,25 +104,14 @@ public class TrackedPointControllerTest {
                 100L,
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30)));
-        var g1 = new Gathering(1L, p1, 10, new Timestamp(1564216200000L),
-                Season.SPRING, false, 0L, 0L, 0L, 0L);
 
-        Mockito.when(gatheringService.dayGathering(anyObject())).thenReturn(Arrays.asList(g1));
+        Mockito.when(pointService.dayGathering(anyObject())).thenReturn(Arrays.asList(p1));
 
         mvc.perform(get("/points/time/{time}", Date.valueOf(new Timestamp(1564216200000L).toLocalDateTime().toLocalDate()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(1L));
-    }
-
-    @Test
-    public void futureDataShouldReturnGatheringsPredictionsForPointsBasedOnTimePassed() throws Exception{
-        mvc.perform(get("/point/time/{time}", Date.valueOf(new Timestamp(11564243500000L).toLocalDateTime().toLocalDate()))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(2L));
+                .andExpect(jsonPath("$[0].name").value("Piazza dei signori"));
     }
 
 }

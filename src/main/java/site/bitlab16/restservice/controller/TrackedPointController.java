@@ -32,7 +32,6 @@ public class TrackedPointController {
         return pointService.dayGathering(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
     }
 
-    @JsonView(View.Summary.class)
     @GetMapping(value = "/point/{id}")
     TrackedPoint pointDetailsBasedOnId(@PathVariable("id") Long id) {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());

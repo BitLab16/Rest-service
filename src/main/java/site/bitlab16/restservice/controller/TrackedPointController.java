@@ -19,8 +19,6 @@ public class TrackedPointController {
 
     private final TrackedPointService pointService;
 
-    private final static Timestamp currTime = new Timestamp(1564223400000L);
-
     public TrackedPointController(TrackedPointService pointService) {
         this.pointService = pointService;
     }
@@ -28,12 +26,14 @@ public class TrackedPointController {
     @JsonView(View.Summary.class)
     @GetMapping(value= "/points")
     Collection<TrackedPoint> getCurrentDayGatheringDetected() {
+        Timestamp currTime = new Timestamp(System.currentTimeMillis());
         return pointService.dayGathering(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
     }
 
     @JsonView(View.Summary.class)
     @GetMapping(value = "/point/{id}")
     TrackedPoint pointDetailsBasedOnId(@PathVariable("id") Long id) {
+        Timestamp currTime = new Timestamp(System.currentTimeMillis());
         return pointService.findById(id, Date.valueOf(currTime.toLocalDateTime().toLocalDate()))
                 .orElseThrow(() -> new PointNotFoundException(id));
     }

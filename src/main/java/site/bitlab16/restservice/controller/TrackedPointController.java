@@ -19,6 +19,8 @@ public class TrackedPointController {
 
     private final TrackedPointService pointService;
 
+    private final static Timestamp currTime = new Timestamp(1564223400000L);
+
     public TrackedPointController(TrackedPointService pointService) {
         this.pointService = pointService;
     }
@@ -34,7 +36,7 @@ public class TrackedPointController {
     @GetMapping(value = "/point/{id}")
     TrackedPoint pointDetailsBasedOnId(@PathVariable("id") Long id) {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
-        return pointService.findById(id, Date.valueOf(currTime.toLocalDateTime().toLocalDate()))
+        return pointService.findByCode(id, Date.valueOf(currTime.toLocalDateTime().toLocalDate()))
                 .orElseThrow(() -> new PointNotFoundException(id));
     }
 

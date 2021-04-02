@@ -37,6 +37,12 @@ public class GatheringService {
         return result;
     }
 
+    public Collection<Gathering> yearGatheringFromDate(Date date) {return repository.getYearGatheringFromDate(date);}
+
+    public Collection<Gathering> yearGatheringFromDate(Long id, Date date) {
+        return repository.getYearGatheringFromDate(id, date);
+    }
+
     public Collection<Gathering> lastUpdate() {return repository.findLastGatheringForAllPoint();}
 
     public Collection<Gathering> pastData(Timestamp time) {return repository.findPastGatherings(time);}

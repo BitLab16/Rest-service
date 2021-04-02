@@ -50,13 +50,13 @@ public class TrackedPointServiceIntegrationTest {
     private TrackedPointRepository pointRepository;
 
     @Test
-    public void whenInvalidId_thenTrackedPointShouldNotBeFound() {
-        Mockito.when(pointRepository.findById(-99L)).thenReturn(java.util.Optional.empty());
-        assertThat(pointService.findById(-99L, Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate()))).isEmpty();
+    public void whenInvalidCode_thenTrackedPointShouldNotBeFound() {
+        Mockito.when(pointRepository.findByCode(-99L)).thenReturn(java.util.Optional.empty());
+        assertThat(pointService.findByCode(-99L, Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate()))).isEmpty();
     }
 
     @Test
-    public void whenValidId_thenTrackedPointShouldBeFound() {
+    public void whenValidCode_thenTrackedPointShouldBeFound() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint(1L,
                 "Piazza dei signori",
@@ -75,15 +75,15 @@ public class TrackedPointServiceIntegrationTest {
         var g4 = new Gathering(4L,
                 1L, 8, new Timestamp(1564223399999L), Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
-        Mockito.when(pointRepository.findById(1L)).thenReturn(java.util.Optional.of(p1));
-        Mockito.when(gatheringServiceMock.dayGathering(1L,
+        Mockito.when(pointRepository.findByCode(100L)).thenReturn(java.util.Optional.of(p1));
+        Mockito.when(gatheringServiceMock.yearGatheringFromDate(1L,
                 Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate())))
                 .thenReturn(Arrays.asList(g1, g2, g3, g4));
         Date date = Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate());
-        Optional<TrackedPoint> point = pointService.findById(1L, date);
+        Optional<TrackedPoint> point = pointService.findByCode(100L, date);
         assertThat(point.get().getName()).isEqualTo("Piazza dei signori");
         assertThat(point.get().getGatherings()).hasSize(4);
-        verifyFindByIdIsCalledOnce();
+        verifyFindByCodeIsCalledOnce();
     }
 
     private void verifyFindAllTrackedPointsIsCalledOnce() {
@@ -91,8 +91,8 @@ public class TrackedPointServiceIntegrationTest {
         Mockito.reset(pointRepository);
     }
 
-    private void verifyFindByIdIsCalledOnce() {
-        Mockito.verify(pointRepository, VerificationModeFactory.times(1)).findById(Mockito.anyLong());
+    private void verifyFindByCodeIsCalledOnce() {
+        Mockito.verify(pointRepository, VerificationModeFactory.times(1)).findByCode(Mockito.anyLong());
         Mockito.reset(pointRepository);
     }
 }

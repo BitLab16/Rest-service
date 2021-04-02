@@ -22,22 +22,22 @@ public class TrackedPointService {
         this.gatheringService = gatheringService;
     }
 
-    public Optional<TrackedPoint> findById(Long id, Date date) {
-        Optional<TrackedPoint> t = trackedPointRepository.findById(id);
+    public Optional<TrackedPoint> findByCode(Long code, Date date) {
+        Optional<TrackedPoint> t = trackedPointRepository.findByCode(code);
         t.ifPresent(trackedPoint -> {
-            var gatherings = gatheringService.dayGathering(id, date);
+            var gatherings = gatheringService.yearGatheringFromDate(t.get().getId(), date);
             trackedPoint.addGatherings(new ArrayList<>(gatherings));
         });
         return t;
     }
 
     public Collection<TrackedPoint> dayGathering(Date date) {
-        var gaterings = gatheringService.dayGathering(date);
-        List<Long> trackedPointId = gaterings.stream().map(Gathering::getPoint).collect(Collectors.toList());
+        var gatherings = gatheringService.dayGathering(date);
+        List<Long> trackedPointId = gatherings.stream().map(Gathering::getPoint).collect(Collectors.toList());
         Collection<TrackedPoint> trackedPoints = trackedPointRepository.findAllById(trackedPointId);
         trackedPoints.stream().forEach(trackedPoint -> {
             trackedPoint.addGatherings(
-                gaterings.stream().filter(o -> o.getPoint() == trackedPoint.getId()).collect(Collectors.toList())
+                gatherings.stream().filter(o -> o.getPoint() == trackedPoint.getId()).collect(Collectors.toList())
             );
         });
         return trackedPoints;

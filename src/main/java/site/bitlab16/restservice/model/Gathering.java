@@ -17,6 +17,7 @@ public class Gathering implements Serializable {
     @Column(
             name = "id"
     )
+
     @GeneratedValue(strategy=GenerationType.AUTO)
     @JsonView(View.Summary.class)
     private Long id;

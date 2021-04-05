@@ -30,7 +30,7 @@ public class TrackedPointService {
         Optional<TrackedPointStatistic> statistic = Optional.empty();
         if(trackedPointId.isPresent()) {
             var gatherings = gatheringService.intervalGatheringFromDate(trackedPointId.get(), from, to);
-            statistic = gatherings.stream()
+            statistic = gatherings.parallelStream()
                     .map(new GatheringToStatistic())
                     .reduce((result, newStatistic) -> {
                         for (var day: DayOfWeek.values()) {

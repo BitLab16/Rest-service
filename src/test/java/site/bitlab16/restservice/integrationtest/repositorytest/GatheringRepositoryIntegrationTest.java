@@ -13,6 +13,7 @@ import site.bitlab16.restservice.model.Season;
 import site.bitlab16.restservice.model.TrackedPoint;
 import site.bitlab16.restservice.repository.GatheringRepository;
 
+import java.util.Calendar;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -234,6 +235,84 @@ public class GatheringRepositoryIntegrationTest {
                 g1.getId(), g2.getId());
 
     }
+
+    @Test
+    public void whenIntervalGatheringFromDate_thenCollectionOfGatheringShouldBeReturned(){
+        GeometryFactory factory = new GeometryFactory();
+        var c = Calendar.getInstance();
+        var from = Calendar.getInstance();
+        from.set(2019, 7, 5);
+        var to = Calendar.getInstance();
+        to.set(2019, 7, 3);
+
+        var p1 = new TrackedPoint();
+        p1.setName("Piazza della frutta");
+        p1.setCode(200L);
+        p1.setDescription("Una delle piazze più importanti di padova");
+        p1.setLocation(factory.createPoint(new Coordinate(-110, 30)));
+
+        var g1 = new Gathering();
+        g1.setPoint(1L);
+        g1.setFlow(10);
+        c.set(2019, 7,2);
+        g1.setDetectionTime(new Timestamp(c.getTimeInMillis()));
+        g1.setSeason(Season.SPRING);
+        g1.setHoliday(false);
+        g1.setTimeIndex(0L);
+        g1.setWeatherIndex(0L);
+        g1.setSeasonIndex(0L);
+        g1.setAttractionIndex(0L);
+        var g2 = new Gathering();
+        g2.setPoint(1L);
+        g2.setFlow(10);
+        c.set(2019, 7,3);
+        g2.setDetectionTime(new Timestamp(c.getTimeInMillis()));
+        g2.setSeason(Season.SPRING);
+        g2.setHoliday(false);
+        g2.setTimeIndex(0L);
+        g2.setWeatherIndex(0L);
+        g2.setSeasonIndex(0L);
+        g2.setAttractionIndex(0L);
+        var g3 = new Gathering();
+        g3.setPoint(1L);
+        g3.setFlow(10);
+        c.set(2019, 7,4);
+        g3.setDetectionTime(new Timestamp(c.getTimeInMillis()));
+        g3.setSeason(Season.SPRING);
+        g3.setHoliday(false);
+        g3.setTimeIndex(0L);
+        g3.setWeatherIndex(0L);
+        g3.setSeasonIndex(0L);
+        g3.setAttractionIndex(0L);
+        var g4 = new Gathering();
+        g4.setPoint(1L);
+        g4.setFlow(10);
+        c.set(2019, 7,5);
+        g4.setDetectionTime(new Timestamp(c.getTimeInMillis()));
+        g4.setSeason(Season.SPRING);
+        g4.setHoliday(false);
+        g4.setTimeIndex(0L);
+        g4.setWeatherIndex(0L);
+        g4.setSeasonIndex(0L);
+        g4.setAttractionIndex(0L);
+
+
+        entityManager.persist(p1);
+        entityManager.persist(g1);
+        entityManager.persist(g2);
+        entityManager.persist(g3);
+        entityManager.persist(g4);
+        entityManager.flush();
+
+        Collection<Gathering> found = gatheringRepository.intervalGatheringFromDate(1L,
+                new Date(from.getTimeInMillis()), new Date(to.getTimeInMillis()));
+
+        assertThat(found).hasSize(3).extracting(Gathering::getId).contains(
+                g2.getId(), g3.getId(), g4.getId());
+
+    }
+
+
 
     /*@Test
     public void whenFindFutureGatherings_thenTheLastGatheringPredictionForAllPointsAfterThatTimeShouldBeReturned(){

@@ -41,4 +41,23 @@ public class TrackedPointRepositoryIntegrationTest {
 
         assertThat(found.get().getCode()).isEqualTo(200L);
     }
+
+    @Test
+    public void whenFindTrackePointIdByCode_thenIdShouldBeReturned(){
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new TrackedPoint();
+        p1.setName("Piazza della frutta");
+        p1.setCode(200L);
+        p1.setDescription("Una delle piazze più importanti di padova");
+        p1.setLocation(factory.createPoint(new Coordinate(-110, 30)));
+
+        entityManager.persist(p1);
+        entityManager.flush();
+
+        Optional<Long> id = pointRepository.findTrackedPointIdByCode(200L);
+
+        assertThat(id).isEqualTo(200L);
+    }
+
+
 }

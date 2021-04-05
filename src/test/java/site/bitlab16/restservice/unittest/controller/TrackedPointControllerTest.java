@@ -114,4 +114,11 @@ public class TrackedPointControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Piazza dei signori"));
     }
 
+    @Test
+    public void whenValidCodeForAvg_pointStatisticShouldBeReturned() throws Exception {
+        mvc.perform(get("/point/{id}/avg", 100L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

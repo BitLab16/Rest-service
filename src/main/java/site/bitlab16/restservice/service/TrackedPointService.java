@@ -9,16 +9,15 @@ import site.bitlab16.restservice.repository.TrackedPointRepository;
 import java.sql.Date;
 import java.time.DayOfWeek;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class TrackedPointService {
 
-    private TrackedPointRepository trackedPointRepository;
+    private final TrackedPointRepository trackedPointRepository;
 
-    private GatheringService gatheringService;
+    private final GatheringService gatheringService;
 
     public TrackedPointService(TrackedPointRepository trackedPointRepository, GatheringService gatheringService) {
         this.trackedPointRepository = trackedPointRepository;
@@ -57,11 +56,9 @@ public class TrackedPointService {
         var gatherings = gatheringService.dayGathering(date);
         List<Long> trackedPointId = gatherings.stream().map(Gathering::getPoint).collect(Collectors.toList());
         Collection<TrackedPoint> trackedPoints = trackedPointRepository.findAllById(trackedPointId);
-        trackedPoints.stream().forEach(trackedPoint -> {
-            trackedPoint.addGatherings(
-                gatherings.stream().filter(o -> o.getPoint() == trackedPoint.getId()).collect(Collectors.toList())
-            );
-        });
+        trackedPoints.forEach(trackedPoint -> trackedPoint.addGatherings(
+            gatherings.stream().filter(o -> o.getPoint().equals(trackedPoint.getId())).collect(Collectors.toList())
+        ));
         return trackedPoints;
     }
 }

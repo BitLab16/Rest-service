@@ -39,11 +39,12 @@ public class TrackedPointRepositoryIntegrationTest {
 
         Optional<TrackedPoint> found = pointRepository.findByCode(200L);
 
+        assertThat(found).isPresent();
         assertThat(found.get().getCode()).isEqualTo(200L);
     }
 
     @Test
-    public void whenFindTrackePointIdByCode_thenIdShouldBeReturned(){
+    public void whenFindTrackPointIdByCode_thenIdShouldBeReturned(){
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint();
         p1.setName("Piazza della frutta");
@@ -54,9 +55,11 @@ public class TrackedPointRepositoryIntegrationTest {
         entityManager.persist(p1);
         entityManager.flush();
 
-        Optional<Long> id = pointRepository.findTrackedPointIdByCode(200L);
+        var id = pointRepository.findTrackedPointIdByCode(200L);
 
-        assertThat(id).isEqualTo(200L);
+        assertThat(id)
+                .isPresent()
+                .contains(200L);
     }
 
 

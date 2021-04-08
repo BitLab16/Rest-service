@@ -1,39 +1,29 @@
 package site.bitlab16.restservice.integrationtest.servicetest;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.Season;
-import site.bitlab16.restservice.model.TrackedPoint;
 import site.bitlab16.restservice.repository.GatheringRepository;
 import site.bitlab16.restservice.service.GatheringService;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-public class GatheringServiceIntegrationTest {
+class GatheringServiceIntegrationTest {
 
     @InjectMocks
     private GatheringService gatheringService;
@@ -42,8 +32,7 @@ public class GatheringServiceIntegrationTest {
     private GatheringRepository gatheringRepository;
 
     @Test
-    public void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
-        GeometryFactory factory = new GeometryFactory();
+    void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
         var p1 = new Gathering(1L, 1L,
                 10,
                 new Timestamp(1564216200000L),

@@ -186,7 +186,6 @@ public class Gathering implements Serializable {
         if (flow != gathering.flow) return false;
         if (isHoliday != gathering.isHoliday) return false;
         if (!id.equals(gathering.id)) return false;
-        //if (!point.equals(gathering.point)) return false;
         if (!detectionTime.equals(gathering.detectionTime)) return false;
         if (season != gathering.season) return false;
         if (!Objects.equals(timeIndex, gathering.timeIndex)) return false;

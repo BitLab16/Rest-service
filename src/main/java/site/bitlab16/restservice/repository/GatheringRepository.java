@@ -58,6 +58,15 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
     @Query(value = """
                 SELECT *
                 FROM gatherings_detection g
+                WHERE date_trunc('day',g.detection_time) >= :to
+                    and date_trunc('day', g.detection_time) <= :from
+                    and g.tracked_point_id = :id
+            """, nativeQuery = true)
+    Collection<Gathering> intervalGatheringFromDate(Long id, Date from ,Date to);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_detection g
                 WHERE g.detection_time > (to_date(:day, 'YYYY-MM-DD') - INTERVAL '1 year')
                     and g.detection_time < :day
             """, nativeQuery = true)

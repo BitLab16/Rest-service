@@ -16,4 +16,11 @@ public interface TrackedPointRepository extends JpaRepository<TrackedPoint, Long
                 WHERE t.code = :code 
             """, nativeQuery = true)
     Optional<TrackedPoint> findByCode(Long code);
+
+    @Query(value = """
+                SELECT t.id
+                FROM tracked_point t
+                WHERE t.code = :code 
+            """, nativeQuery = true)
+    Optional<Long> findTrackedPointIdByCode(Long code);
 }

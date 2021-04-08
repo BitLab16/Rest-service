@@ -11,7 +11,6 @@ import site.bitlab16.restservice.model.jackson_view.View;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,23 +43,9 @@ public class TrackedPoint implements Serializable {
 
     @JsonView(View.Summary.class)
     @Transient
-    private List<Gathering> gatherings = new ArrayList<Gathering>();
+    private List<Gathering> gatherings = new ArrayList<>();
 
     public TrackedPoint() {}
-
-    public TrackedPoint(Long id,
-                        String name,
-                        Long code,
-                        String description,
-                        Point location,
-                        List<Gathering> gatherings) {
-        this.id = id;
-        this.name = name;
-        this.code = code;
-        this.description = description;
-        this.location = location;
-        addGatherings(gatherings);
-    }
 
     public TrackedPoint(Long id, String name, Long code, String description, Point location) {
         this.id = id;
@@ -71,18 +56,8 @@ public class TrackedPoint implements Serializable {
     }
 
     public void addGatherings(List<Gathering> gatherings) {
-        try {
-            this.gatherings.addAll(gatherings);
-        } catch (UnsupportedOperationException ex) {
-            System.out.println(this.gatherings.getClass());
-            ex.printStackTrace();
-        }
+        this.gatherings.addAll(gatherings);
     }
-
-    public void removeGatherings(Gathering gathering) {
-        this.gatherings.remove(gathering);
-    }
-
 
     public List<Gathering> getGatherings() {
         return gatherings;

@@ -14,12 +14,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.Season;
 import site.bitlab16.restservice.model.TrackedPoint;
+import site.bitlab16.restservice.model.TrackedPointStatistic;
 import site.bitlab16.restservice.repository.TrackedPointRepository;
 import site.bitlab16.restservice.service.GatheringService;
 import site.bitlab16.restservice.service.TrackedPointService;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +44,65 @@ public class TrackedPointServiceIntegrationTest {
         Mockito.when(pointRepository.findByCode(-99L)).thenReturn(java.util.Optional.empty());
         assertThat(pointService.findByCode(-99L, Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate()))).isEmpty();
     }
+
+    @Test
+    public void whenAvgWithValidCode_thenTrackedPointStatisticReturned() {
+        GeometryFactory factory = new GeometryFactory();
+        var c = Calendar.getInstance();
+        var from = Calendar.getInstance();
+        from.set(2019, Calendar.JULY, 5);
+        var to = Calendar.getInstance();
+        to.set(2019, Calendar.JULY, 3);
+
+        var p1 = new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                factory.createPoint(new Coordinate( -110, 30)));
+
+        c.set(2019, Calendar.JULY,2, 8, 0);
+        var g1 = new Gathering(1L,
+                1L, 5, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                false, 0L, 0L, 0L, 0L);
+
+        c.set(2019, Calendar.JULY,2, 9, 0);
+        var g2 = new Gathering(2L,
+                1L, 6, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                false, 0L, 0L, 0L, 0L);
+
+        c.set(2019, Calendar.JULY,3, 9, 0);
+        var g3 = new Gathering(3L,
+                1L, 12, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                false, 0L, 0L, 0L, 0L);
+
+        c.set(2019, Calendar.JULY,3, 10, 0);
+        var g4 = new Gathering(4L,
+                1L, 8, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                false, 0L, 0L, 0L, 0L);
+
+        c.set(2019, Calendar.JULY,9, 9, 0);
+        var g5 = new Gathering(4L,
+                1L, 12, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                false, 0L, 0L, 0L, 0L);
+
+
+        Mockito.when(pointRepository.findTrackedPointIdByCode(100L)).thenReturn(java.util.Optional.of(1L));
+        Mockito.when(gatheringServiceMock.intervalGatheringFromDate(1L,
+                new Date(from.getTimeInMillis()),
+                new Date(to.getTimeInMillis()))).thenReturn(Arrays.asList(g1, g2, g3, g4, g5));
+        Optional<TrackedPointStatistic> statistic = pointService.avgFlowByTrackedPointCode(100L,
+                new Date(from.getTimeInMillis()),
+                new Date(to.getTimeInMillis()));
+        var expected = new TrackedPointStatistic();
+        expected.addMetric(DayOfWeek.TUESDAY, 8, 5);
+        expected.addMetric(DayOfWeek.TUESDAY, 9, 9);
+        expected.addMetric(DayOfWeek.WEDNESDAY, 9, 12);
+        expected.addMetric(DayOfWeek.WEDNESDAY, 10, 8);
+        assertThat(statistic.get().getMetrics()).hasSize(2);
+        assertThat(statistic.get()).usingRecursiveComparison().isEqualTo(expected);
+        verifyFindTrackedPointIdByCodeIsCalledOnce();
+    }
+
 
     @Test
     public void whenValidCode_thenTrackedPointShouldBeFound() {
@@ -116,7 +177,14 @@ public class TrackedPointServiceIntegrationTest {
     }
 
     private void verifyFindByCodeIsCalledOnce() {
-        Mockito.verify(pointRepository, VerificationModeFactory.times(1)).findByCode(Mockito.anyLong());
+        Mockito.verify(pointRepository, VerificationModeFactory.times(1))
+                .findByCode(Mockito.anyLong());
+        Mockito.reset(pointRepository);
+    }
+
+    private void verifyFindTrackedPointIdByCodeIsCalledOnce() {
+        Mockito.verify(pointRepository, VerificationModeFactory.times(1))
+                .findTrackedPointIdByCode(Mockito.anyLong());
         Mockito.reset(pointRepository);
     }
 }

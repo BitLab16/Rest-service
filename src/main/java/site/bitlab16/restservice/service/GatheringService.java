@@ -37,6 +37,10 @@ public class GatheringService {
         return result;
     }
 
+    public Collection<Gathering> intervalGatheringFromDate(Long id, Date from, Date to) {
+        return repository.intervalGatheringFromDate(id, from, to);
+    }
+
     public Collection<Gathering> yearGatheringFromDate(Date date) {return repository.getYearGatheringFromDate(date);}
 
     public Collection<Gathering> yearGatheringFromDate(Long id, Date date) {

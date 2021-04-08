@@ -74,4 +74,90 @@ public class GatheringServiceIntegrationTest {
                 p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
     }
 
+    @Test
+    public void whenGetPastDayGatheringWithId_thenListOfGatheringOfThatPointShouldBeReturn() {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new Gathering(1L, 1L,
+                10,
+                new Timestamp(1564216200000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+        var p2 = new Gathering(2L, 1L,
+                10,
+                new Timestamp(1564218000000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+        var p3 = new Gathering(3L, 1L,
+                10,
+                new Timestamp(1564221600000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+        var p4 = new Gathering(4L, 1L,
+                10,
+                new Timestamp(1564223400000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+
+        Mockito.when(gatheringRepository.getPastDayGathering(1L,
+                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
+                .thenReturn(List.of(p1, p2, p3));
+        Mockito.when(gatheringRepository.getFutureDayGathering(1L,
+                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
+                .thenReturn(List.of(p4));
+
+        Collection<Gathering> gatherings = gatheringService.dayGathering(1L,
+                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(4).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
+    }
+
+    @Test
+    public void whenGetYearGatheringFromDate_thenListOfPastYearGatheringShouldBeReturn() {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new Gathering(1L, 1L,
+                10,
+                new Timestamp(1564216200000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+        var p2 = new Gathering(2L, 1L,
+                10,
+                new Timestamp(1564218000000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+        var p3 = new Gathering(3L, 1L,
+                10,
+                new Timestamp(1564221600000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+
+        Mockito.when(gatheringRepository.getYearGatheringFromDate(
+                Date.valueOf(new Timestamp(1564221700000L).toLocalDateTime().toLocalDate())))
+                .thenReturn(List.of(p1, p2, p3));
+
+        Collection<Gathering> gatherings = gatheringService.yearGatheringFromDate(
+                Date.valueOf(new Timestamp(1564221700000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(3).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime());
+    }
+
+    @Test
+    public void whenGetYearGatheringFromDateWithId_thenListOfPastYearGatheringOfThatPointShouldBeReturn() {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new Gathering(1L, 1L,
+                10,
+                new Timestamp(1564216200000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+        var p2 = new Gathering(2L, 1L,
+                10,
+                new Timestamp(1564218000000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+        var p3 = new Gathering(3L, 1L,
+                10,
+                new Timestamp(1564221600000L),
+                Season.SPRING, false, 0L, 0L, 0L,0L);
+
+        Mockito.when(gatheringRepository.getYearGatheringFromDate(1L,
+                Date.valueOf(new Timestamp(1564221700000L).toLocalDateTime().toLocalDate())))
+                .thenReturn(List.of(p1, p2, p3));
+
+        Collection<Gathering> gatherings = gatheringService.yearGatheringFromDate(1L,
+                Date.valueOf(new Timestamp(1564221700000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(3).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime());
+    }
+
+
 }

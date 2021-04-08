@@ -46,6 +46,9 @@ public class TrackedPoint implements Serializable {
     @Transient
     private List<Gathering> gatherings = new ArrayList<Gathering>();
 
+    @Transient
+    private TrackedPointStatistic trackedPointStatistics;
+
     public TrackedPoint() {}
 
     public TrackedPoint(Long id,
@@ -68,6 +71,10 @@ public class TrackedPoint implements Serializable {
         this.code = code;
         this.description = description;
         this.location = location;
+    }
+
+    public void setTrackedPointStatistics(TrackedPointStatistic trackedPointStatistics) {
+        this.trackedPointStatistics = trackedPointStatistics;
     }
 
     public void addGatherings(List<Gathering> gatherings) {

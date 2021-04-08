@@ -136,4 +136,10 @@
 	</repository>
 	</distributionManagement>
 
+	<properties>
+		<sonar.projectKey>BitLab16_Rest-service</sonar.projectKey>
+		<sonar.organization>bitlab16</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	</properties>
+
 </project>

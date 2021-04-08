@@ -19,13 +19,17 @@ import site.bitlab16.restservice.controller.TrackedPointController;
 import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.Season;
 import site.bitlab16.restservice.model.TrackedPoint;
+import site.bitlab16.restservice.model.TrackedPointStatistic;
 import site.bitlab16.restservice.service.GatheringService;
 import site.bitlab16.restservice.service.TrackedPointService;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyObject;
@@ -112,6 +116,31 @@ public class TrackedPointControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("Piazza dei signori"));
+    }
+
+    @Test
+    public void whenValidCodeForAvg_pointStatisticShouldBeReturned() throws Exception {
+        var expected = new TrackedPointStatistic();
+        expected.addMetric(DayOfWeek.TUESDAY, 8, 5);
+        expected.addMetric(DayOfWeek.TUESDAY, 9, 9);
+        expected.addMetric(DayOfWeek.WEDNESDAY, 9, 12);
+        expected.addMetric(DayOfWeek.WEDNESDAY, 10, 8);
+
+        var from = Calendar.getInstance();
+        from.set(2019, Calendar.JULY, 5);
+        var to = Calendar.getInstance();
+        to.set(2019, Calendar.JULY, 3);
+
+        var currTime = new Timestamp(System.currentTimeMillis());
+
+        Mockito.when(pointService.avgFlowByTrackedPointCode(100L,
+                Date.valueOf(currTime.toLocalDateTime().toLocalDate()),
+                Date.valueOf(currTime.toLocalDateTime().minusWeeks(24).toLocalDate())))
+                .thenReturn(Optional.of(expected));
+
+        mvc.perform(get("/point/{id}/avg", 100L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
 }

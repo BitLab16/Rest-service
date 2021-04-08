@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import site.bitlab16.restservice.exception.PointNotFoundException;
 import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.TrackedPoint;
+import site.bitlab16.restservice.model.TrackedPointStatistic;
 import site.bitlab16.restservice.model.jackson_view.View;
 import site.bitlab16.restservice.service.GatheringService;
 import site.bitlab16.restservice.service.TrackedPointService;
@@ -18,8 +19,6 @@ import java.util.Collection;
 public class TrackedPointController {
 
     private final TrackedPointService pointService;
-
-    private final static Timestamp currTime = new Timestamp(1564223400000L);
 
     public TrackedPointController(TrackedPointService pointService) {
         this.pointService = pointService;
@@ -36,6 +35,15 @@ public class TrackedPointController {
     TrackedPoint pointDetailsBasedOnId(@PathVariable("id") Long id) {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
         return pointService.findByCode(id, Date.valueOf(currTime.toLocalDateTime().toLocalDate()))
+                .orElseThrow(() -> new PointNotFoundException(id));
+    }
+
+    @GetMapping(value = "/point/{id}/avg")
+    TrackedPointStatistic pointDetailsBasedOnIdAndTime(@PathVariable("id") Long id) {
+        Timestamp currTime = new Timestamp(System.currentTimeMillis());
+        return pointService.avgFlowByTrackedPointCode(id,
+                Date.valueOf(currTime.toLocalDateTime().toLocalDate()),
+                Date.valueOf(currTime.toLocalDateTime().minusWeeks(24).toLocalDate()))
                 .orElseThrow(() -> new PointNotFoundException(id));
     }
 

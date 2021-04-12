@@ -28,6 +28,44 @@ public interface GatheringRepository extends JpaRepository<Gathering, Long> {
     @Query(value = """
                 SELECT *
                 FROM gatherings_detection g
+                WHERE date_trunc('day', g.detection_time) = :day AND
+                    (EXTRACT(MINUTE FROM g.detection_time) = 30 OR
+                    EXTRACT(MINUTE FROM g.detection_time) = 00)  
+            """, nativeQuery = true)
+    Collection<Gathering> getPastDayHoursGatherings(Date day);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_prediction g
+                WHERE date_trunc('day', g.detection_time) = :day AND
+                    (EXTRACT(MINUTE FROM g.detection_time) = 30 OR
+                    EXTRACT(MINUTE FROM g.detection_time) = 00)  
+            """, nativeQuery = true)
+    Collection<Gathering> getFutureDayHoursGatherings(Date day);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_detection g
+                WHERE date_trunc('day', g.detection_time) = :day AND
+                    g.tracked_point_id = :id AND
+                    (EXTRACT(MINUTE FROM g.detection_time) = 30 OR
+                    EXTRACT(MINUTE FROM g.detection_time) = 00)  
+            """, nativeQuery = true)
+    Collection<Gathering> getPastDayHoursGatherings(Long id, Date day);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_prediction g
+                WHERE date_trunc('day', g.detection_time) = :day AND
+                    g.tracked_point_id = :id AND
+                    (EXTRACT(MINUTE FROM g.detection_time) = 30 OR
+                    EXTRACT(MINUTE FROM g.detection_time) = 00)  
+            """, nativeQuery = true)
+    Collection<Gathering> getFutureDayHoursGatherings(Long id, Date day);
+
+    @Query(value = """
+                SELECT *
+                FROM gatherings_detection g
                 WHERE date_trunc('day', g.detection_time) = :day
             """, nativeQuery = true)
     Collection<Gathering> getPastDayGathering(Date day);

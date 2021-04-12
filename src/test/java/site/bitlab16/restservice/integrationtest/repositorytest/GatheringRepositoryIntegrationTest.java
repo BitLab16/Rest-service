@@ -138,7 +138,7 @@ class GatheringRepositoryIntegrationTest {
     }
 
     @Test
-    public void whenPastDayGatheringWithId_thenAllPastGatheringsOfPointInThatDayShouldBeReturned(){
+    void whenPastDayGatheringWithId_thenAllPastGatheringsOfPointInThatDayShouldBeReturned(){
 
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint();

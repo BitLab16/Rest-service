@@ -25,7 +25,7 @@ public class TrackedPoint implements Serializable {
     private Long id;
 
     @Column(name = "point_name")
-    @JsonView(View.Summary.class)
+    @JsonView(View.PointInfo.class)
     private String name;
 
     @Column(name = "code")
@@ -33,6 +33,7 @@ public class TrackedPoint implements Serializable {
     private Long code;
 
     @Column(name = "description")
+    @JsonView(View.PointInfo.class)
     private String description;
 
     @Column(name = "location")

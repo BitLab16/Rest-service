@@ -16,20 +16,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import site.bitlab16.restservice.controller.TrackedPointController;
-import site.bitlab16.restservice.model.Gathering;
-import site.bitlab16.restservice.model.Season;
 import site.bitlab16.restservice.model.TrackedPoint;
 import site.bitlab16.restservice.model.TrackedPointStatistic;
-import site.bitlab16.restservice.service.GatheringService;
 import site.bitlab16.restservice.service.TrackedPointService;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.LinkedHashMap;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyObject;
@@ -39,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(TrackedPointController.class)
-public class TrackedPointControllerTest {
+class TrackedPointControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -64,11 +58,11 @@ public class TrackedPointControllerTest {
 
         Date date = Date.valueOf(new Timestamp(System.currentTimeMillis()).toLocalDateTime().toLocalDate());
 
-        Mockito.when(pointService.findByCode(p2.getCode(), date)).thenReturn(java.util.Optional.of(p2));
+        Mockito.when(pointService.findByCode(p2.getCode())).thenReturn(java.util.Optional.of(p2));
     }
 
     @Test
-    public void pointsShouldReturnLastGatheringForAllPointsFromService() throws Exception{
+    void pointsShouldReturnLastGatheringForAllPointsFromService() throws Exception{
         GeometryFactory factory = new GeometryFactory();
         var p3 = new TrackedPoint(3L,
                 "Prato della valle",
@@ -76,17 +70,17 @@ public class TrackedPointControllerTest {
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30)));
 
-        Mockito.when(pointService.dayGathering(anyObject())).thenReturn(Arrays.asList(p3));
+        Mockito.when(pointService.dayHoursGatherings(anyObject())).thenReturn(Collections.singletonList(p3));
 
         mvc.perform(get("/points")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value("Prato della valle"));
+                .andExpect(jsonPath("$[0].code").value(300L));
     }
 
     @Test
-    public void whenValidCode_pointShouldReturnRightPoint() throws Exception{
+    void whenValidCode_pointShouldReturnRightPoint() throws Exception{
         mvc.perform(get("/point/{id}", 200L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -94,14 +88,14 @@ public class TrackedPointControllerTest {
     }
 
     @Test
-    public void whenInvalidId_noPointShouldBeReturned() throws Exception{
+    void whenInvalidId_noPointShouldBeReturned() throws Exception{
         mvc.perform(get("/point/{id}", -99L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void pointsWithTimeShouldReturnAllGatheringsBasedOnTimePassed() throws Exception{
+    void pointsWithTimeShouldReturnAllGatheringsBasedOnTimePassed() throws Exception{
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint(1L,
                 "Piazza dei signori",
@@ -109,17 +103,17 @@ public class TrackedPointControllerTest {
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30)));
 
-        Mockito.when(pointService.dayGathering(anyObject())).thenReturn(Arrays.asList(p1));
+        Mockito.when(pointService.dayHoursGatherings(anyObject())).thenReturn(Collections.singletonList(p1));
 
         mvc.perform(get("/points/time/{time}", Date.valueOf(new Timestamp(1564216200000L).toLocalDateTime().toLocalDate()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value("Piazza dei signori"));
+                .andExpect(jsonPath("$[0].code").value(100L));
     }
 
     @Test
-    public void whenValidCodeForAvg_pointStatisticShouldBeReturned() throws Exception {
+    void whenValidCodeForAvg_pointStatisticShouldBeReturned() throws Exception {
         var expected = new TrackedPointStatistic();
         expected.addMetric(DayOfWeek.TUESDAY, 8, 5);
         expected.addMetric(DayOfWeek.TUESDAY, 9, 9);

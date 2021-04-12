@@ -12,7 +12,7 @@ public class TrackedPointStatistic {
     @JsonProperty("flow-average")
     EnumMap<DayOfWeek, Map<Integer, Integer>> metrics = new EnumMap<>(DayOfWeek.class);
 
-    public EnumMap<DayOfWeek, Map<Integer, Integer>> getMetrics() {
+    public Map<DayOfWeek, Map<Integer, Integer>> getMetrics() {
         return metrics;
     }
 

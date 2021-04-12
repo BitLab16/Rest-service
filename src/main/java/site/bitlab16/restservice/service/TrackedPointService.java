@@ -43,10 +43,33 @@ public class TrackedPointService {
         return statistic;
     }
 
-    public Optional<TrackedPoint> findByCode(Long code, Date date) {
-        Optional<TrackedPoint> t = trackedPointRepository.findByCode(code);
+    public Optional<TrackedPoint> findByCode(Long code) {
+        return trackedPointRepository.findByCode(code);
+    }
+
+    public Optional<TrackedPoint> dayHoursGatherings(Long code, Date date) {
+        var t = findByCode(code);
         t.ifPresent(trackedPoint -> {
-            var gatherings = gatheringService.yearGatheringFromDate(t.get().getId(), date);
+            var gatherings = gatheringService.dayGatheringsOnlyHour(t.get().getId(), date);
+            trackedPoint.addGatherings(new ArrayList<>(gatherings));
+        });
+        return t;
+    }
+
+    public Collection<TrackedPoint> dayHoursGatherings(Date date) {
+        var gatherings = gatheringService.dayGatheringsOnlyHour(date);
+        List<Long> trackedPointId = gatherings.stream().map(Gathering::getPoint).collect(Collectors.toList());
+        Collection<TrackedPoint> trackedPoints = trackedPointRepository.findAllById(trackedPointId);
+        trackedPoints.forEach(trackedPoint -> trackedPoint.addGatherings(
+                gatherings.stream().filter(o -> o.getPoint().equals(trackedPoint.getId())).collect(Collectors.toList())
+        ));
+        return trackedPoints;
+    }
+
+    public Optional<TrackedPoint> dayGathering(Long code, Date date) {
+        var t = findByCode(code);
+        t.ifPresent(trackedPoint -> {
+            var gatherings = gatheringService.dayGathering(t.get().getId(), date);
             trackedPoint.addGatherings(new ArrayList<>(gatherings));
         });
         return t;

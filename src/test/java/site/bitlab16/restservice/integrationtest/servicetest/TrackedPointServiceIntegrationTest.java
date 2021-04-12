@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-public class TrackedPointServiceIntegrationTest {
+class TrackedPointServiceIntegrationTest {
 
     @InjectMocks
     private TrackedPointService pointService;
@@ -40,13 +40,13 @@ public class TrackedPointServiceIntegrationTest {
     private TrackedPointRepository pointRepository;
 
     @Test
-    public void whenInvalidCode_thenTrackedPointShouldNotBeFound() {
+    void whenInvalidCode_thenTrackedPointShouldNotBeFound() {
         Mockito.when(pointRepository.findByCode(-99L)).thenReturn(java.util.Optional.empty());
-        assertThat(pointService.findByCode(-99L, Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate()))).isEmpty();
+        assertThat(pointService.findByCode(-99L)).isEmpty();
     }
 
     @Test
-    public void whenAvgWithValidCode_thenTrackedPointStatisticReturned() {
+    void whenAvgWithValidCode_thenTrackedPointStatisticReturned() {
         GeometryFactory factory = new GeometryFactory();
         var c = Calendar.getInstance();
         var from = Calendar.getInstance();
@@ -105,7 +105,7 @@ public class TrackedPointServiceIntegrationTest {
 
 
     @Test
-    public void whenValidCode_thenTrackedPointShouldBeFound() {
+    void whenValidCode_thenTrackedPointShouldBeFound() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint(1L,
                 "Piazza dei signori",
@@ -125,18 +125,18 @@ public class TrackedPointServiceIntegrationTest {
                 1L, 8, new Timestamp(1564223399999L), Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         Mockito.when(pointRepository.findByCode(100L)).thenReturn(java.util.Optional.of(p1));
-        Mockito.when(gatheringServiceMock.yearGatheringFromDate(1L,
+        /*Mockito.when(gatheringServiceMock.yearGatheringFromDate(1L,
                 Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate())))
-                .thenReturn(Arrays.asList(g1, g2, g3, g4));
+                .thenReturn(Arrays.asList(g1, g2, g3, g4));*/
         Date date = Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate());
-        Optional<TrackedPoint> point = pointService.findByCode(100L, date);
+        Optional<TrackedPoint> point = pointService.findByCode(100L);
         assertThat(point.get().getName()).isEqualTo("Piazza dei signori");
-        assertThat(point.get().getGatherings()).hasSize(4);
+        //assertThat(point.get().getGatherings()).hasSize(4);
         verifyFindByCodeIsCalledOnce();
     }
 
     @Test
-    public void whenDayGathering_thenTrackedPointShouldBeFound() {
+    void whenDayGathering_thenTrackedPointShouldBeFound() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint(1L,
                 "Piazza dei signori",

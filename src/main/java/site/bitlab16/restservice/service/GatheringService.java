@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -31,6 +30,24 @@ public class GatheringService {
     public Collection<Gathering> dayGathering(Long id, Date date) {
         var past = repository.getPastDayGathering(id, date);
         var future = repository.getFutureDayGathering(id, date);
+        List<Gathering> result = new ArrayList<>(past.size() + future.size());
+        result.addAll(past);
+        result.addAll(future);
+        return result;
+    }
+
+    public Collection<Gathering> dayGatheringsOnlyHour(Long id, Date date) {
+        var past = repository.getPastDayHoursGatherings(id, date);
+        var future = repository.getFutureDayHoursGatherings(id, date);
+        List<Gathering> result = new ArrayList<>(past.size() + future.size());
+        result.addAll(past);
+        result.addAll(future);
+        return result;
+    }
+
+    public Collection<Gathering> dayGatheringsOnlyHour(Date date) {
+        var past = repository.getPastDayHoursGatherings(date);
+        var future = repository.getFutureDayHoursGatherings(date);
         List<Gathering> result = new ArrayList<>(past.size() + future.size());
         result.addAll(past);
         result.addAll(future);

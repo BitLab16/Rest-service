@@ -64,7 +64,7 @@ class GatheringServiceIntegrationTest {
     }
 
     @Test
-    public void whenGetPastDayGatheringWithId_thenListOfGatheringOfThatPointShouldBeReturn() {
+    void whenGetPastDayGatheringWithId_thenListOfGatheringOfThatPointShouldBeReturn() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
@@ -97,7 +97,7 @@ class GatheringServiceIntegrationTest {
     }
 
     @Test
-    public void whenGetYearGatheringFromDate_thenListOfPastYearGatheringShouldBeReturn() {
+    void whenGetYearGatheringFromDate_thenListOfPastYearGatheringShouldBeReturn() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
@@ -123,7 +123,7 @@ class GatheringServiceIntegrationTest {
     }
 
     @Test
-    public void whenGetYearGatheringFromDateWithId_thenListOfPastYearGatheringOfThatPointShouldBeReturn() {
+    void whenGetYearGatheringFromDateWithId_thenListOfPastYearGatheringOfThatPointShouldBeReturn() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,

@@ -26,9 +26,7 @@ public class TrackedPointController {
     @GetMapping(value= "/points")
     public Collection<TrackedPoint> getCurrentDayGatheringDetected() {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
-        System.out.println(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
         var t = pointService.dayHoursGatherings(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
-        System.out.println(t);
         return t;
     }
 

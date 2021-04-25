@@ -26,8 +26,7 @@ public class TrackedPointController {
     @GetMapping(value= "/points")
     public Collection<TrackedPoint> getCurrentDayGatheringDetected() {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
-        var t = pointService.dayHoursGatherings(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
-        return t;
+        return pointService.dayHoursGatherings(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
     }
 
     @JsonView(View.PointInfo.class)

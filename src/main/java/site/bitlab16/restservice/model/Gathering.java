@@ -17,8 +17,7 @@ public class Gathering implements Serializable {
     @Column(
             name = "id"
     )
-
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @JsonView(View.Summary.class)
     private Long id;
 
@@ -43,45 +42,65 @@ public class Gathering implements Serializable {
     private Timestamp detectionTime;
 
     @Column(
+            name = "weather",
+            nullable = false
+    )
+    private int weather;
+
+
+    @Column(
             name = "season",
             nullable = false
     )
-    @JsonIgnore
     private Season season;
 
     @Column(
             name = "holiday",
             nullable = false
     )
-    @JsonIgnore
     private boolean isHoliday;
 
     @Column(name = "time_index")
-    @JsonIgnore
     private Long timeIndex;
 
     @Column(name = "weather_index")
-    @JsonIgnore
     private Long weatherIndex;
 
     @Column(name = "season_index")
-    @JsonIgnore
     private Long seasonIndex;
 
     @Column(name = "attractions_index")
-    @JsonIgnore
-    private Long attractionIndex;
+    private Long attractionsIndex;
 
-    public Gathering(Long id,
-                     Long point,
-                     int flow,
-                     Timestamp detectionTime,
-                     Season season,
-                     boolean isHoliday,
-                     Long timeIndex,
-                     Long weatherIndex,
-                     Long seasonIndex,
-                     Long attractionIndex) {
+    public Gathering(Long id, Long point, int flow, Timestamp detectionTime, int weather, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
+        this.id = id;
+        this.point = point;
+        this.flow = flow;
+        this.detectionTime = detectionTime;
+        this.weather = weather;
+        this.season = season;
+        this.isHoliday = isHoliday;
+        this.timeIndex = timeIndex;
+        this.weatherIndex = weatherIndex;
+        this.seasonIndex = seasonIndex;
+        this.attractionsIndex = attractionsIndex;
+    }
+
+    public Gathering(Long point, int flow, Timestamp detectionTime, int weather, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
+        this.id = id;
+        this.point = point;
+        this.flow = flow;
+        this.detectionTime = detectionTime;
+        this.weather = weather;
+        this.season = season;
+        this.isHoliday = isHoliday;
+        this.timeIndex = timeIndex;
+        this.weatherIndex = weatherIndex;
+        this.seasonIndex = seasonIndex;
+        this.attractionsIndex = attractionsIndex;
+    }
+
+    public Gathering(Long id, Long point, int flow, Timestamp detectionTime, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
         this.id = id;
         this.point = point;
         this.flow = flow;
@@ -91,10 +110,18 @@ public class Gathering implements Serializable {
         this.timeIndex = timeIndex;
         this.weatherIndex = weatherIndex;
         this.seasonIndex = seasonIndex;
-        this.attractionIndex = attractionIndex;
+        this.attractionsIndex = attractionsIndex;
     }
 
     public Gathering() { }
+
+    public int getWeather() {
+        return weather;
+    }
+
+    public void setWeather(int weather) {
+        this.weather = weather;
+    }
 
     public Long getId() {
         return id;
@@ -160,12 +187,12 @@ public class Gathering implements Serializable {
         this.seasonIndex = seasonIndex;
     }
 
-    public Long getAttractionIndex() {
-        return attractionIndex;
+    public Long getAttractionsIndex() {
+        return attractionsIndex;
     }
 
-    public void setAttractionIndex(Long attractionIndex) {
-        this.attractionIndex = attractionIndex;
+    public void setAttractionsIndex(Long attractionsIndex) {
+        this.attractionsIndex = attractionsIndex;
     }
 
     public int getFlow() {
@@ -193,7 +220,7 @@ public class Gathering implements Serializable {
             return false;
         if (!Objects.equals(seasonIndex, gathering.seasonIndex))
             return false;
-        return Objects.equals(attractionIndex, gathering.attractionIndex);
+        return Objects.equals(attractionsIndex, gathering.attractionsIndex);
     }
 
     @Override
@@ -202,12 +229,13 @@ public class Gathering implements Serializable {
         result = 31 * result + point.hashCode();
         result = 31 * result + flow;
         result = 31 * result + detectionTime.hashCode();
+        result = 31 * result + weather;
         result = 31 * result + season.hashCode();
         result = 31 * result + (isHoliday ? 1 : 0);
-        result = 31 * result + (timeIndex != null ? timeIndex.hashCode() : 0);
-        result = 31 * result + (weatherIndex != null ? weatherIndex.hashCode() : 0);
-        result = 31 * result + (seasonIndex != null ? seasonIndex.hashCode() : 0);
-        result = 31 * result + (attractionIndex != null ? attractionIndex.hashCode() : 0);
+        result = 31 * result + timeIndex.hashCode();
+        result = 31 * result + weatherIndex.hashCode();
+        result = 31 * result + seasonIndex.hashCode();
+        result = 31 * result + attractionsIndex.hashCode();
         return result;
     }
 
@@ -215,14 +243,16 @@ public class Gathering implements Serializable {
     public String toString() {
         return "Gathering{" +
                 "id=" + id +
-                ", point_id=" + point +
+                ", point=" + point +
+                ", flow=" + flow +
                 ", detectionTime=" + detectionTime +
+                ", weather=" + weather +
                 ", season=" + season +
                 ", isHoliday=" + isHoliday +
                 ", timeIndex=" + timeIndex +
                 ", weatherIndex=" + weatherIndex +
                 ", seasonIndex=" + seasonIndex +
-                ", attractionIndex=" + attractionIndex +
+                ", attractionsIndex=" + attractionsIndex +
                 '}';
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.Season;
 import site.bitlab16.restservice.repository.GatheringRepository;
+import site.bitlab16.restservice.repository.PredictionRepository;
 import site.bitlab16.restservice.service.GatheringService;
 
 import java.sql.Date;
@@ -30,6 +31,9 @@ class GatheringServiceIntegrationTest {
 
     @Mock
     private GatheringRepository gatheringRepository;
+
+    //@Mock
+    //private PredictionRepository predictionRepository;
 
     @Test
     void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
@@ -53,14 +57,14 @@ class GatheringServiceIntegrationTest {
         Mockito.when(gatheringRepository.getPastDayGathering(
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
                 .thenReturn(List.of(p1, p2, p3));
-        Mockito.when(gatheringRepository.getFutureDayGathering(
+        /*Mockito.when(gatheringRepository.getFutureDayGathering(
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
-                .thenReturn(List.of(p4));
+                .thenReturn(List.of(p4));*/
 
         Collection<Gathering> gatherings = gatheringService.dayGathering(
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate()));
-        assertThat(gatherings).hasSize(4).extracting(Gathering::getDetectionTime).contains(
-                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
+        assertThat(gatherings).hasSize(3).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime());
     }
 
     @Test
@@ -86,14 +90,14 @@ class GatheringServiceIntegrationTest {
         Mockito.when(gatheringRepository.getPastDayGathering(1L,
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
                 .thenReturn(List.of(p1, p2, p3));
-        Mockito.when(gatheringRepository.getFutureDayGathering(1L,
+        /*Mockito.when(gatheringRepository.getFutureDayGathering(1L,
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
-                .thenReturn(List.of(p4));
+                .thenReturn(List.of(p4));*/
 
         Collection<Gathering> gatherings = gatheringService.dayGathering(1L,
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate()));
-        assertThat(gatherings).hasSize(4).extracting(Gathering::getDetectionTime).contains(
-                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
+        assertThat(gatherings).hasSize(3).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime());
     }
 
     @Test

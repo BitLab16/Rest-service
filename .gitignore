@@ -8,3 +8,4 @@ target
 .DS_Store
 .mvn/
 .run/
+*/META-INF/additional-spring-configuration-metadata.json

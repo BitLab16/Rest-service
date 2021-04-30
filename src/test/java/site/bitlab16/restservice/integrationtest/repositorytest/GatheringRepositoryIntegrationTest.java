@@ -53,7 +53,7 @@ class GatheringRepositoryIntegrationTest {
         g1.setTimeIndex(0L);
         g1.setWeatherIndex(0L);
         g1.setSeasonIndex(0L);
-        g1.setAttractionIndex(0L);
+        g1.setAttractionsIndex(0L);
         var g2 = new Gathering();
         g2.setPoint(1L);
         g2.setFlow(10);
@@ -63,7 +63,7 @@ class GatheringRepositoryIntegrationTest {
         g2.setTimeIndex(0L);
         g2.setWeatherIndex(0L);
         g2.setSeasonIndex(0L);
-        g2.setAttractionIndex(0L);
+        g2.setAttractionsIndex(0L);
         var g3 = new Gathering();
         g3.setPoint(2L);
         g3.setFlow(10);
@@ -73,7 +73,7 @@ class GatheringRepositoryIntegrationTest {
         g3.setTimeIndex(0L);
         g3.setWeatherIndex(0L);
         g3.setSeasonIndex(0L);
-        g3.setAttractionIndex(0L);
+        g3.setAttractionsIndex(0L);
 
         entityManager.persist(p1);
         entityManager.persist(p2);
@@ -111,7 +111,7 @@ class GatheringRepositoryIntegrationTest {
         g1.setTimeIndex(0L);
         g1.setWeatherIndex(0L);
         g1.setSeasonIndex(0L);
-        g1.setAttractionIndex(0L);
+        g1.setAttractionsIndex(0L);
         var g2 = new Gathering();
         g2.setPoint(2L);
         g2.setFlow(10);
@@ -121,7 +121,7 @@ class GatheringRepositoryIntegrationTest {
         g2.setTimeIndex(0L);
         g2.setWeatherIndex(0L);
         g2.setSeasonIndex(0L);
-        g2.setAttractionIndex(0L);
+        g2.setAttractionsIndex(0L);
 
         entityManager.persist(p1);
         entityManager.persist(p2);
@@ -156,7 +156,7 @@ class GatheringRepositoryIntegrationTest {
         g1.setTimeIndex(0L);
         g1.setWeatherIndex(0L);
         g1.setSeasonIndex(0L);
-        g1.setAttractionIndex(0L);
+        g1.setAttractionsIndex(0L);
         var g2 = new Gathering();
         g2.setPoint(1L);
         g2.setFlow(10);
@@ -166,7 +166,7 @@ class GatheringRepositoryIntegrationTest {
         g2.setTimeIndex(0L);
         g2.setWeatherIndex(0L);
         g2.setSeasonIndex(0L);
-        g2.setAttractionIndex(0L);
+        g2.setAttractionsIndex(0L);
 
         entityManager.persist(p1);
         entityManager.persist(g1);
@@ -204,7 +204,7 @@ class GatheringRepositoryIntegrationTest {
         g1.setTimeIndex(0L);
         g1.setWeatherIndex(0L);
         g1.setSeasonIndex(0L);
-        g1.setAttractionIndex(0L);
+        g1.setAttractionsIndex(0L);
         var g2 = new Gathering();
         g2.setPoint(2L);
         g2.setFlow(10);
@@ -214,7 +214,7 @@ class GatheringRepositoryIntegrationTest {
         g2.setTimeIndex(0L);
         g2.setWeatherIndex(0L);
         g2.setSeasonIndex(0L);
-        g2.setAttractionIndex(0L);
+        g2.setAttractionsIndex(0L);
 
         entityManager.persist(p1);
         entityManager.persist(p2);
@@ -252,7 +252,7 @@ class GatheringRepositoryIntegrationTest {
         g1.setTimeIndex(0L);
         g1.setWeatherIndex(0L);
         g1.setSeasonIndex(0L);
-        g1.setAttractionIndex(0L);
+        g1.setAttractionsIndex(0L);
         var g2 = new Gathering();
         g2.setPoint(2L);
         g2.setFlow(10);
@@ -262,7 +262,7 @@ class GatheringRepositoryIntegrationTest {
         g2.setTimeIndex(0L);
         g2.setWeatherIndex(0L);
         g2.setSeasonIndex(0L);
-        g2.setAttractionIndex(0L);
+        g2.setAttractionsIndex(0L);
 
         entityManager.persist(p1);
         entityManager.persist(p2);
@@ -302,7 +302,7 @@ class GatheringRepositoryIntegrationTest {
         g1.setTimeIndex(0L);
         g1.setWeatherIndex(0L);
         g1.setSeasonIndex(0L);
-        g1.setAttractionIndex(0L);
+        g1.setAttractionsIndex(0L);
         var g2 = new Gathering();
         g2.setPoint(1L);
         g2.setFlow(10);
@@ -313,7 +313,7 @@ class GatheringRepositoryIntegrationTest {
         g2.setTimeIndex(0L);
         g2.setWeatherIndex(0L);
         g2.setSeasonIndex(0L);
-        g2.setAttractionIndex(0L);
+        g2.setAttractionsIndex(0L);
         var g3 = new Gathering();
         g3.setPoint(1L);
         g3.setFlow(10);
@@ -324,7 +324,7 @@ class GatheringRepositoryIntegrationTest {
         g3.setTimeIndex(0L);
         g3.setWeatherIndex(0L);
         g3.setSeasonIndex(0L);
-        g3.setAttractionIndex(0L);
+        g3.setAttractionsIndex(0L);
         var g4 = new Gathering();
         g4.setPoint(1L);
         g4.setFlow(10);
@@ -335,7 +335,7 @@ class GatheringRepositoryIntegrationTest {
         g4.setTimeIndex(0L);
         g4.setWeatherIndex(0L);
         g4.setSeasonIndex(0L);
-        g4.setAttractionIndex(0L);
+        g4.setAttractionsIndex(0L);
 
 
         entityManager.persist(p1);

@@ -7,8 +7,6 @@ import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.repository.GatheringRepository;
 import site.bitlab16.restservice.repository.PredictionRepository;
 
-import static org.apache.kafka.common.quota.ClientQuotaEntity.CLIENT_ID;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -34,58 +32,77 @@ public class GatheringService {
         repository.saveAll(gathering);
     }
 
+    private boolean isPredictionAvailable(Timestamp date) {
+        return date.after(Timestamp.valueOf("2019-12-31 23:55:00"));
+    }
+
+    private LocalDateTime getLastDateTimeFromTimestamp(Timestamp timestamp) {
+        return LocalDateTime.of(
+                LocalDate.of(
+                        timestamp.toLocalDateTime().getYear(),
+                        timestamp.toLocalDateTime().getMonth(),
+                        timestamp.toLocalDateTime().getDayOfMonth()), LocalTime.of(23, 55));
+    }
+
+    private Timestamp getLastTimeFromGatherings(Collection<Gathering> gatherings) {
+        return Collections
+                .max(gatherings, Comparator.comparing(Gathering::getDetectionTime)).getDetectionTime();
+    }
+
+    private List<Gathering> concatResult(Collection<Gathering> past, Collection<Gathering> future) {
+        List<Gathering> result = new ArrayList<>(past.size() + future.size());
+        result.addAll(past);
+        result.addAll(future);
+        return result;
+    }
+
 
     public Collection<Gathering> dayGathering(Date date) {
         var past = repository.getPastDayGathering(date);
-        var maxDetectionTime = Collections
-                .max(past, Comparator.comparing(Gathering::getDetectionTime)).getDetectionTime();
-        LocalDateTime time = LocalDateTime.of(
-                LocalDate.of(
-                        maxDetectionTime.toLocalDateTime().getYear(),
-                        maxDetectionTime.toLocalDateTime().getMonth(),
-                        maxDetectionTime.toLocalDateTime().getDayOfMonth()), LocalTime.of(23, 55));
-        var future = predictionRepository.findAllFromInterval(
-                maxDetectionTime.toLocalDateTime(), time);
-        List<Gathering> result = new ArrayList<>(past.size() /*+ predictions.size()*/);
-        result.addAll(past);
-        //result.addAll(predictions);
-        return result;
+        var maxDetectionTime = getLastTimeFromGatherings(past);
+        List<Gathering> future = Collections.emptyList();
+        if(isPredictionAvailable(maxDetectionTime)) {
+            var timeTime = getLastDateTimeFromTimestamp(maxDetectionTime);
+            future = predictionRepository.findAllFromInterval(
+                    maxDetectionTime.toLocalDateTime(), timeTime);
+        }
+        return concatResult(past, future);
     }
 
     public Collection<Gathering> dayGathering(Long id, Date date) {
         var past = repository.getPastDayGathering(id, date);
-        var maxDetectionTime = Collections
-                .max(past, Comparator.comparing(Gathering::getDetectionTime)).getDetectionTime();
-        LocalDateTime time = LocalDateTime.of(
-                LocalDate.of(
-                        maxDetectionTime.toLocalDateTime().getYear(),
-                        maxDetectionTime.toLocalDateTime().getMonth(),
-                        maxDetectionTime.toLocalDateTime().getDayOfMonth()), LocalTime.of(23, 55));
-        var future = predictionRepository.findByIdFromInterval(
-                id, maxDetectionTime.toLocalDateTime(), time);
-        //var predictions= future.collectList().block();
-        List<Gathering> result = new ArrayList<>(past.size() + future.size());
-        result.addAll(past);
-        result.addAll(future);
-        return result;
+        var maxDetectionTime = getLastTimeFromGatherings(past);
+        List<Gathering> future = Collections.emptyList();
+        if(isPredictionAvailable(maxDetectionTime)) {
+            var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);
+            future = predictionRepository.findByIdFromInterval(
+                    id, maxDetectionTime.toLocalDateTime(), lastTime);
+        }
+        return concatResult(past, future);
     }
 
     public Collection<Gathering> dayGatheringsOnlyHour(Long id, Date date) {
         var past = repository.getPastDayHoursGatherings(id, date);
-        var future = repository.getFutureDayHoursGatherings(id, date);
-        List<Gathering> result = new ArrayList<>(past.size() + future.size());
-        result.addAll(past);
-        result.addAll(future);
-        return result;
+        var maxDetectionTime = getLastTimeFromGatherings(past);
+        List<Gathering> future = Collections.emptyList();
+        if(isPredictionAvailable(maxDetectionTime)) {
+            var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);
+            future = predictionRepository.findOnlyHoursByIdFromInterval(
+                    id, maxDetectionTime.toLocalDateTime(), lastTime);
+        }
+        return concatResult(past, future);
     }
 
     public Collection<Gathering> dayGatheringsOnlyHour(Date date) {
         var past = repository.getPastDayHoursGatherings(date);
-        var future = repository.getFutureDayHoursGatherings(date);
-        List<Gathering> result = new ArrayList<>(past.size() + future.size());
-        result.addAll(past);
-        result.addAll(future);
-        return result;
+        var maxDetectionTime = getLastTimeFromGatherings(past);
+        List<Gathering> future = Collections.emptyList();
+        if(isPredictionAvailable(maxDetectionTime)) {
+            var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);
+            future = predictionRepository.findAllOnlyHoursFromInterval(
+                    maxDetectionTime.toLocalDateTime(), lastTime);
+        }
+        return concatResult(past, future);
     }
 
     public Collection<Gathering> intervalGatheringFromDate(Long id, Date from, Date to) {

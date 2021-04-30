@@ -1,24 +1,99 @@
 package site.bitlab16.restservice.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import site.bitlab16.restservice.model.Gathering;
 import site.bitlab16.restservice.model.TrackedPoint;
+import site.bitlab16.restservice.model.TrackedPointStatistic;
 import site.bitlab16.restservice.repository.TrackedPointRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.sql.Date;
+import java.time.DayOfWeek;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class TrackedPointService {
 
-    @Autowired
-    private TrackedPointRepository repository;
+    private final TrackedPointRepository trackedPointRepository;
 
-    public List<TrackedPoint> findAll() {
-        return repository.findAll();
+    private final GatheringService gatheringService;
+
+    public TrackedPointService(TrackedPointRepository trackedPointRepository, GatheringService gatheringService) {
+        this.trackedPointRepository = trackedPointRepository;
+        this.gatheringService = gatheringService;
     }
 
-    public Optional<TrackedPoint> findById(Long id) {
-        return repository.findById(id);
+    public Optional<TrackedPointStatistic> avgFlowByTrackedPointCode(Long code, Date from, Date to) {
+        Optional<Long> trackedPointId = trackedPointRepository.findTrackedPointIdByCode(code);
+        Optional<TrackedPointStatistic> statistic = Optional.empty();
+        if(trackedPointId.isPresent()) {
+            var gatherings = gatheringService.intervalGatheringFromDate(trackedPointId.get(), from, to);
+            statistic = gatherings.parallelStream()
+                    .map(new GatheringToStatistic())
+                    .reduce((result, newStatistic) -> {
+                        for (var day: DayOfWeek.values()) {
+                            var hourMap = newStatistic.getMetrics().get(day);
+                            if(hourMap != null)
+                                result.addMetrics(day, hourMap);
+                        }
+                        return result;
+                    });
+        }
+        return statistic;
+    }
+
+    public Optional<TrackedPoint> findByCode(Long code) {
+        return trackedPointRepository.findByCode(code);
+    }
+
+    public Optional<TrackedPoint> dayHoursGatherings(Long code, Date date) {
+        var t = findByCode(code);
+        t.ifPresent(trackedPoint -> {
+            var gatherings = gatheringService.dayGatheringsOnlyHour(t.get().getId(), date);
+            trackedPoint.addGatherings(new ArrayList<>(gatherings));
+        });
+        return t;
+    }
+
+    public Collection<TrackedPoint> dayHoursGatherings(Date date) {
+        var gatherings = gatheringService.dayGatheringsOnlyHour(date);
+        List<Long> trackedPointId = gatherings.stream().map(Gathering::getPoint).collect(Collectors.toList());
+        Collection<TrackedPoint> trackedPoints = trackedPointRepository.findAllById(trackedPointId);
+        trackedPoints.forEach(trackedPoint -> trackedPoint.addGatherings(
+                gatherings.stream().filter(o -> o.getPoint().equals(trackedPoint.getId())).collect(Collectors.toList())
+        ));
+        return trackedPoints;
+    }
+
+    public Optional<TrackedPoint> dayGathering(Long code, Date date) {
+        var t = findByCode(code);
+        t.ifPresent(trackedPoint -> {
+            var gatherings = gatheringService.dayGathering(t.get().getId(), date);
+            trackedPoint.addGatherings(new ArrayList<>(gatherings));
+        });
+        return t;
+    }
+
+    public Collection<TrackedPoint> dayGathering(Date date) {
+        var gatherings = gatheringService.dayGathering(date);
+        List<Long> trackedPointId = gatherings.stream().map(Gathering::getPoint).collect(Collectors.toList());
+        Collection<TrackedPoint> trackedPoints = trackedPointRepository.findAllById(trackedPointId);
+        trackedPoints.forEach(trackedPoint -> trackedPoint.addGatherings(
+            gatherings.stream().filter(o -> o.getPoint().equals(trackedPoint.getId())).collect(Collectors.toList())
+        ));
+        return trackedPoints;
+    }
+}
+
+class GatheringToStatistic implements Function<Gathering, TrackedPointStatistic> {
+
+    @Override
+    public TrackedPointStatistic apply(Gathering gathering) {
+        var statistic = new TrackedPointStatistic();
+        var weekDay = gathering.getDetectionTime().toLocalDateTime().getDayOfWeek();
+        var hour = gathering.getDetectionTime().toLocalDateTime().getHour();
+        statistic.addMetric(weekDay, hour,gathering.getFlow());
+        return statistic;
     }
 }

@@ -1,34 +1,52 @@
 package site.bitlab16.restservice.model;
 
+import com.fasterxml.jackson.annotation.*;
+import site.bitlab16.restservice.model.jackson_view.View;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "gatherings_detection")
-public class Gathering {
+@JsonRootName(value = "gathering")
+public class Gathering implements Serializable {
 
     @Id
     @Column(
             name = "id"
     )
-    @GeneratedValue(strategy=GenerationType.TABLE)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @JsonView(View.Summary.class)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "tracked_point_id", nullable = false)
-    private TrackedPoint point;
+    @Column(
+            name = "tracked_point_id",
+            nullable = false
+    )
+    private Long point;
+
 
     @Column(
             name = "people_concentration",
             nullable = false
     )
+    @JsonView(View.Summary.class)
     private int flow;
 
     @Column(
             name = "detection_time",
             nullable = false)
+    @JsonView(View.Summary.class)
     private Timestamp detectionTime;
+
+    @Column(
+            name = "weather",
+            nullable = false
+    )
+    private int weather;
+
 
     @Column(
             name = "season",
@@ -52,18 +70,37 @@ public class Gathering {
     private Long seasonIndex;
 
     @Column(name = "attractions_index")
-    private Long attractionIndex;
+    private Long attractionsIndex;
 
-    public Gathering(Long id,
-                     TrackedPoint point,
-                     int flow,
-                     Timestamp detectionTime,
-                     Season season,
-                     boolean isHoliday,
-                     Long timeIndex,
-                     Long weatherIndex,
-                     Long seasonIndex,
-                     Long attractionIndex) {
+    public Gathering(Long id, Long point, int flow, Timestamp detectionTime, int weather, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
+        this.id = id;
+        this.point = point;
+        this.flow = flow;
+        this.detectionTime = detectionTime;
+        this.weather = weather;
+        this.season = season;
+        this.isHoliday = isHoliday;
+        this.timeIndex = timeIndex;
+        this.weatherIndex = weatherIndex;
+        this.seasonIndex = seasonIndex;
+        this.attractionsIndex = attractionsIndex;
+    }
+
+    public Gathering(Long point, int flow, Timestamp detectionTime, int weather, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
+        this.id = id;
+        this.point = point;
+        this.flow = flow;
+        this.detectionTime = detectionTime;
+        this.weather = weather;
+        this.season = season;
+        this.isHoliday = isHoliday;
+        this.timeIndex = timeIndex;
+        this.weatherIndex = weatherIndex;
+        this.seasonIndex = seasonIndex;
+        this.attractionsIndex = attractionsIndex;
+    }
+
+    public Gathering(Long id, Long point, int flow, Timestamp detectionTime, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
         this.id = id;
         this.point = point;
         this.flow = flow;
@@ -73,11 +110,17 @@ public class Gathering {
         this.timeIndex = timeIndex;
         this.weatherIndex = weatherIndex;
         this.seasonIndex = seasonIndex;
-        this.attractionIndex = attractionIndex;
+        this.attractionsIndex = attractionsIndex;
     }
 
-    public Gathering() {
+    public Gathering() { }
 
+    public int getWeather() {
+        return weather;
+    }
+
+    public void setWeather(int weather) {
+        this.weather = weather;
     }
 
     public Long getId() {
@@ -88,11 +131,11 @@ public class Gathering {
         this.id = id;
     }
 
-    public TrackedPoint getPoint() {
+    public Long getPoint() {
         return point;
     }
 
-    public void setPoint(TrackedPoint point) {
+    public void setPoint(Long point) {
         this.point = point;
     }
 
@@ -144,12 +187,12 @@ public class Gathering {
         this.seasonIndex = seasonIndex;
     }
 
-    public Long getAttractionIndex() {
-        return attractionIndex;
+    public Long getAttractionsIndex() {
+        return attractionsIndex;
     }
 
-    public void setAttractionIndex(Long attractionIndex) {
-        this.attractionIndex = attractionIndex;
+    public void setAttractionsIndex(Long attractionsIndex) {
+        this.attractionsIndex = attractionsIndex;
     }
 
     public int getFlow() {
@@ -163,22 +206,21 @@ public class Gathering {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Gathering)) return false;
 
         Gathering gathering = (Gathering) o;
 
         if (flow != gathering.flow) return false;
         if (isHoliday != gathering.isHoliday) return false;
         if (!id.equals(gathering.id)) return false;
-        if (!point.equals(gathering.point)) return false;
         if (!detectionTime.equals(gathering.detectionTime)) return false;
         if (season != gathering.season) return false;
-        if (timeIndex != null ? !timeIndex.equals(gathering.timeIndex) : gathering.timeIndex != null) return false;
-        if (weatherIndex != null ? !weatherIndex.equals(gathering.weatherIndex) : gathering.weatherIndex != null)
+        if (!Objects.equals(timeIndex, gathering.timeIndex)) return false;
+        if (!Objects.equals(weatherIndex, gathering.weatherIndex))
             return false;
-        if (seasonIndex != null ? !seasonIndex.equals(gathering.seasonIndex) : gathering.seasonIndex != null)
+        if (!Objects.equals(seasonIndex, gathering.seasonIndex))
             return false;
-        return attractionIndex != null ? attractionIndex.equals(gathering.attractionIndex) : gathering.attractionIndex == null;
+        return Objects.equals(attractionsIndex, gathering.attractionsIndex);
     }
 
     @Override
@@ -187,12 +229,13 @@ public class Gathering {
         result = 31 * result + point.hashCode();
         result = 31 * result + flow;
         result = 31 * result + detectionTime.hashCode();
+        result = 31 * result + weather;
         result = 31 * result + season.hashCode();
         result = 31 * result + (isHoliday ? 1 : 0);
-        result = 31 * result + (timeIndex != null ? timeIndex.hashCode() : 0);
-        result = 31 * result + (weatherIndex != null ? weatherIndex.hashCode() : 0);
-        result = 31 * result + (seasonIndex != null ? seasonIndex.hashCode() : 0);
-        result = 31 * result + (attractionIndex != null ? attractionIndex.hashCode() : 0);
+        result = 31 * result + timeIndex.hashCode();
+        result = 31 * result + weatherIndex.hashCode();
+        result = 31 * result + seasonIndex.hashCode();
+        result = 31 * result + attractionsIndex.hashCode();
         return result;
     }
 
@@ -200,14 +243,16 @@ public class Gathering {
     public String toString() {
         return "Gathering{" +
                 "id=" + id +
-                ", point_id=" + point +
+                ", point=" + point +
+                ", flow=" + flow +
                 ", detectionTime=" + detectionTime +
+                ", weather=" + weather +
                 ", season=" + season +
                 ", isHoliday=" + isHoliday +
                 ", timeIndex=" + timeIndex +
                 ", weatherIndex=" + weatherIndex +
                 ", seasonIndex=" + seasonIndex +
-                ", attractionIndex=" + attractionIndex +
+                ", attractionsIndex=" + attractionsIndex +
                 '}';
     }
 }

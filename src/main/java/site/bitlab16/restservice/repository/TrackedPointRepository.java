@@ -1,8 +1,6 @@
 package site.bitlab16.restservice.repository;
 
-
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import site.bitlab16.restservice.model.TrackedPoint;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,12 +11,16 @@ import java.util.Optional;
 public interface TrackedPointRepository extends JpaRepository<TrackedPoint, Long>{
 
     @Query(value = """
-            WITH summary AS (
                 SELECT *
-                FROM tracked_point t)
-            SELECT s.*
-            FROM summary s
-            WHERE s.id = :id""", nativeQuery = true)
-    @Override
-    Optional<TrackedPoint> findById(@Param("id") Long id);
+                FROM tracked_point t
+                WHERE t.code = :code 
+            """, nativeQuery = true)
+    Optional<TrackedPoint> findByCode(Long code);
+
+    @Query(value = """
+                SELECT t.id
+                FROM tracked_point t
+                WHERE t.code = :code 
+            """, nativeQuery = true)
+    Optional<Long> findTrackedPointIdByCode(Long code);
 }

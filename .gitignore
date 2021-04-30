@@ -1,6 +1,11 @@
-#Intellij project files
-.idea/
+.idea
 *.iml
-
-#Maven target directory
-target/
+target
+.classpath
+.project
+.settings
+.vscode
+.DS_Store
+.mvn/
+.run/
+*/META-INF/additional-spring-configuration-metadata.json

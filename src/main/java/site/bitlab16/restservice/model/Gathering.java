@@ -72,39 +72,35 @@ public class Gathering implements Serializable {
     @Column(name = "attractions_index")
     private Long attractionsIndex;
 
-    public Gathering(Long id, Long point, int flow, Timestamp detectionTime, int weather, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
+    public Gathering(Long id,
+                     Long point,
+                     int flow,
+                     Timestamp detectionTime,
+                     int weather,
+                     Season season,
+                     boolean isHoliday,
+                     Long timeIndex,
+                     Long weatherIndex,
+                     Long seasonIndex,
+                     Long attractionsIndex) {
+        this(point, flow, detectionTime, weather, season, isHoliday, timeIndex, weatherIndex, seasonIndex, attractionsIndex);
         this.id = id;
+    }
+
+    public Gathering(Long point,
+                     int flow,
+                     Timestamp detectionTime,
+                     int weather,
+                     Season season,
+                     boolean isHoliday,
+                     Long timeIndex,
+                     Long weatherIndex,
+                     Long seasonIndex,
+                     Long attractionsIndex) {
         this.point = point;
         this.flow = flow;
         this.detectionTime = detectionTime;
         this.weather = weather;
-        this.season = season;
-        this.isHoliday = isHoliday;
-        this.timeIndex = timeIndex;
-        this.weatherIndex = weatherIndex;
-        this.seasonIndex = seasonIndex;
-        this.attractionsIndex = attractionsIndex;
-    }
-
-    public Gathering(Long point, int flow, Timestamp detectionTime, int weather, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
-        this.id = id;
-        this.point = point;
-        this.flow = flow;
-        this.detectionTime = detectionTime;
-        this.weather = weather;
-        this.season = season;
-        this.isHoliday = isHoliday;
-        this.timeIndex = timeIndex;
-        this.weatherIndex = weatherIndex;
-        this.seasonIndex = seasonIndex;
-        this.attractionsIndex = attractionsIndex;
-    }
-
-    public Gathering(Long id, Long point, int flow, Timestamp detectionTime, Season season, boolean isHoliday, Long timeIndex, Long weatherIndex, Long seasonIndex, Long attractionsIndex) {
-        this.id = id;
-        this.point = point;
-        this.flow = flow;
-        this.detectionTime = detectionTime;
         this.season = season;
         this.isHoliday = isHoliday;
         this.timeIndex = timeIndex;
@@ -208,7 +204,7 @@ public class Gathering implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Gathering)) return false;
 
-        Gathering gathering = (Gathering) o;
+        var gathering = (Gathering) o;
 
         if (flow != gathering.flow) return false;
         if (isHoliday != gathering.isHoliday) return false;

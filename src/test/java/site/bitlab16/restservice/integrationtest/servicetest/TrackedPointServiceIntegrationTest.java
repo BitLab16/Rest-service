@@ -62,27 +62,27 @@ class TrackedPointServiceIntegrationTest {
 
         c.set(2019, Calendar.JULY,2, 8, 0);
         var g1 = new Gathering(1L,
-                1L, 5, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                1L, 5, new Timestamp(c.getTimeInMillis()), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
 
         c.set(2019, Calendar.JULY,2, 9, 0);
         var g2 = new Gathering(2L,
-                1L, 6, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                1L, 6, new Timestamp(c.getTimeInMillis()), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
 
         c.set(2019, Calendar.JULY,3, 9, 0);
         var g3 = new Gathering(3L,
-                1L, 12, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                1L, 12, new Timestamp(c.getTimeInMillis()), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
 
         c.set(2019, Calendar.JULY,3, 10, 0);
         var g4 = new Gathering(4L,
-                1L, 8, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                1L, 8, new Timestamp(c.getTimeInMillis()), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
 
         c.set(2019, Calendar.JULY,9, 9, 0);
         var g5 = new Gathering(4L,
-                1L, 12, new Timestamp(c.getTimeInMillis()), Season.SPRING,
+                1L, 12, new Timestamp(c.getTimeInMillis()), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
 
 
@@ -113,16 +113,16 @@ class TrackedPointServiceIntegrationTest {
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30)));
         var g1 = new Gathering(1L,
-                1L, 5, new Timestamp(1564223400000L), Season.SPRING,
+                1L, 5, new Timestamp(1564223400000L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         var g2 = new Gathering(2L,
-                1L, 6, new Timestamp(1564223400001L), Season.SPRING,
+                1L, 6, new Timestamp(1564223400001L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         var g3 = new Gathering(3L,
-                1L, 7, new Timestamp(1564223400002L), Season.SPRING,
+                1L, 7, new Timestamp(1564223400002L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         var g4 = new Gathering(4L,
-                1L, 8, new Timestamp(1564223399999L), Season.SPRING,
+                1L, 8, new Timestamp(1564223399999L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         Mockito.when(pointRepository.findByCode(100L)).thenReturn(java.util.Optional.of(p1));
         /*Mockito.when(gatheringServiceMock.yearGatheringFromDate(1L,
@@ -144,16 +144,16 @@ class TrackedPointServiceIntegrationTest {
                 "Una delle piazze più importati di padova",
                 factory.createPoint(new Coordinate( -110, 30)));
         var g1 = new Gathering(1L,
-                1L, 5, new Timestamp(1564223400000L), Season.SPRING,
+                1L, 5, new Timestamp(1564223400000L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         var g2 = new Gathering(2L,
-                1L, 6, new Timestamp(1564223400001L), Season.SPRING,
+                1L, 6, new Timestamp(1564223400001L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         var g3 = new Gathering(3L,
-                1L, 7, new Timestamp(1564223400002L), Season.SPRING,
+                1L, 7, new Timestamp(1564223400002L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         var g4 = new Gathering(4L,
-                1L, 8, new Timestamp(1564223399999L), Season.SPRING,
+                1L, 8, new Timestamp(1564223399999L), 0, Season.SPRING,
                 false, 0L, 0L, 0L, 0L);
         List<Long> trackedPointId = new ArrayList<Long>();
         trackedPointId.add(1L);

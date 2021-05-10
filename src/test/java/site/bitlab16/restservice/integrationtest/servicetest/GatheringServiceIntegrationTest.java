@@ -40,18 +40,22 @@ class GatheringServiceIntegrationTest {
         var p1 = new Gathering(1L, 1L,
                 10,
                 new Timestamp(1564216200000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p2 = new Gathering(2L, 1L,
                 10,
                 new Timestamp(1564218000000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p3 = new Gathering(3L, 1L,
                 10,
                 new Timestamp(1564221600000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p4 = new Gathering(4L, 1L,
                 10,
                 new Timestamp(1564223400000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
 
         Mockito.when(gatheringRepository.getPastDayGathering(
@@ -73,18 +77,22 @@ class GatheringServiceIntegrationTest {
         var p1 = new Gathering(1L, 1L,
                 10,
                 new Timestamp(1564216200000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p2 = new Gathering(2L, 1L,
                 10,
                 new Timestamp(1564218000000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p3 = new Gathering(3L, 1L,
                 10,
                 new Timestamp(1564221600000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p4 = new Gathering(4L, 1L,
                 10,
                 new Timestamp(1564223400000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
 
         Mockito.when(gatheringRepository.getPastDayGathering(1L,
@@ -106,14 +114,17 @@ class GatheringServiceIntegrationTest {
         var p1 = new Gathering(1L, 1L,
                 10,
                 new Timestamp(1564216200000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p2 = new Gathering(2L, 1L,
                 10,
                 new Timestamp(1564218000000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p3 = new Gathering(3L, 1L,
                 10,
                 new Timestamp(1564221600000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
 
         Mockito.when(gatheringRepository.getYearGatheringFromDate(
@@ -132,14 +143,17 @@ class GatheringServiceIntegrationTest {
         var p1 = new Gathering(1L, 1L,
                 10,
                 new Timestamp(1564216200000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p2 = new Gathering(2L, 1L,
                 10,
                 new Timestamp(1564218000000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
         var p3 = new Gathering(3L, 1L,
                 10,
                 new Timestamp(1564221600000L),
+                0,
                 Season.SPRING, false, 0L, 0L, 0L,0L);
 
         Mockito.when(gatheringRepository.getYearGatheringFromDate(1L,

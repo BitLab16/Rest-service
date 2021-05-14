@@ -81,7 +81,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGathering(Date date) {
         var past = repository.getPastDayGathering(date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var timeTime = getLastDateTimeFromTimestamp(maxDetectionTime);
@@ -93,7 +96,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGathering(Long id, Date date) {
         var past = repository.getPastDayGathering(id, date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);
@@ -105,7 +111,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGatheringsOnlyHour(Long id, Date date) {
         var past = repository.getPastDayHoursGatherings(id, date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);
@@ -117,7 +126,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGatheringsOnlyHour(Date date) {
         var past = repository.getPastDayHoursGatherings(date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);

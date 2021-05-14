@@ -10,7 +10,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import site.bitlab16.restservice.model.Gathering;
+import site.bitlab16.restservice.model.Indexes;
 import site.bitlab16.restservice.model.Season;
+import site.bitlab16.restservice.model.TimeInformation;
 import site.bitlab16.restservice.repository.GatheringRepository;
 import site.bitlab16.restservice.repository.PredictionRepository;
 import site.bitlab16.restservice.service.GatheringService;
@@ -39,20 +41,36 @@ class GatheringServiceIntegrationTest {
     void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
         var p1 = new Gathering(1L, 1L,
                 10,
-                new Timestamp(1564216200000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564216200000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p2 = new Gathering(2L, 1L,
                 10,
-                new Timestamp(1564218000000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564218000000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p3 = new Gathering(3L, 1L,
                 10,
-                new Timestamp(1564221600000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564221600000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p4 = new Gathering(4L, 1L,
                 10,
-                new Timestamp(1564223400000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564223400000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
 
         Mockito.when(gatheringRepository.getPastDayGathering(
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
@@ -72,20 +90,36 @@ class GatheringServiceIntegrationTest {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
-                new Timestamp(1564216200000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564216200000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p2 = new Gathering(2L, 1L,
                 10,
-                new Timestamp(1564218000000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564218000000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p3 = new Gathering(3L, 1L,
                 10,
-                new Timestamp(1564221600000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564221600000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p4 = new Gathering(4L, 1L,
                 10,
-                new Timestamp(1564223400000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564223400000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
 
         Mockito.when(gatheringRepository.getPastDayGathering(1L,
                 Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
@@ -105,16 +139,28 @@ class GatheringServiceIntegrationTest {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
-                new Timestamp(1564216200000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564216200000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p2 = new Gathering(2L, 1L,
                 10,
-                new Timestamp(1564218000000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564218000000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p3 = new Gathering(3L, 1L,
                 10,
-                new Timestamp(1564221600000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564221600000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
 
         Mockito.when(gatheringRepository.getYearGatheringFromDate(
                 Date.valueOf(new Timestamp(1564221700000L).toLocalDateTime().toLocalDate())))
@@ -131,16 +177,28 @@ class GatheringServiceIntegrationTest {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
-                new Timestamp(1564216200000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564216200000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p2 = new Gathering(2L, 1L,
                 10,
-                new Timestamp(1564218000000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564218000000L),
+                0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
         var p3 = new Gathering(3L, 1L,
                 10,
-                new Timestamp(1564221600000L),
-                Season.SPRING, false, 0L, 0L, 0L,0L);
+                new TimeInformation(
+                        new Timestamp(1564221600000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
 
         Mockito.when(gatheringRepository.getYearGatheringFromDate(1L,
                 Date.valueOf(new Timestamp(1564221700000L).toLocalDateTime().toLocalDate())))

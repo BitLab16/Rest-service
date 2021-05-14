@@ -18,7 +18,11 @@ import site.bitlab16.restservice.repository.PredictionRepository;
 import site.bitlab16.restservice.service.GatheringService;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,15 +38,23 @@ class GatheringServiceIntegrationTest {
     @Mock
     private GatheringRepository gatheringRepository;
 
-    //@Mock
-    //private PredictionRepository predictionRepository;
+    @Mock
+    private PredictionRepository predictionRepository;
+
+    private LocalDateTime getLastDateTimeFromTimestamp(Timestamp timestamp) {
+        return LocalDateTime.of(
+                LocalDate.of(
+                        timestamp.toLocalDateTime().getYear(),
+                        timestamp.toLocalDateTime().getMonth(),
+                        timestamp.toLocalDateTime().getDayOfMonth()), LocalTime.of(23, 55));
+    }
 
     @Test
     void whenGetPastDayGathering_thenListOfGatheringShouldBeReturn() {
         var p1 = new Gathering(1L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564216200000L),
+                        new Timestamp(1577869200000L),
                 0,
                         Season.SPRING,
                         false),
@@ -50,7 +62,7 @@ class GatheringServiceIntegrationTest {
         var p2 = new Gathering(2L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564218000000L),
+                        new Timestamp(1577869500000L),
                         0,
                         Season.SPRING,
                         false),
@@ -58,7 +70,7 @@ class GatheringServiceIntegrationTest {
         var p3 = new Gathering(3L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564221600000L),
+                        new Timestamp(1577869800000L),
                         0,
                         Season.SPRING,
                         false),
@@ -66,72 +78,76 @@ class GatheringServiceIntegrationTest {
         var p4 = new Gathering(4L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564223400000L),
+                        new Timestamp(1577872200000L),
                 0,
                         Season.SPRING,
                         false),
                 new Indexes(0L, 0L, 0L,0L));
 
         Mockito.when(gatheringRepository.getPastDayGathering(
-                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
+                Date.valueOf(new Timestamp(1577869800000L).toLocalDateTime().toLocalDate())))
                 .thenReturn(List.of(p1, p2, p3));
-        /*Mockito.when(gatheringRepository.getFutureDayGathering(
-                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
-                .thenReturn(List.of(p4));*/
+
+        var toTime = getLastDateTimeFromTimestamp(new Timestamp(1577869800000L));
+        Mockito.when(predictionRepository.findAllFromInterval(
+                new Timestamp(1577869800000L).toLocalDateTime(),toTime))
+                .thenReturn(List.of(p4));
 
         Collection<Gathering> gatherings = gatheringService.dayGathering(
-                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate()));
-        assertThat(gatherings).hasSize(3).extracting(Gathering::getDetectionTime).contains(
-                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime());
+                Date.valueOf(new Timestamp(1577869800000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(4).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
     }
 
     @Test
     void whenGetPastDayGatheringWithId_thenListOfGatheringOfThatPointShouldBeReturn() {
-        GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564216200000L),
-                0,
+                        new Timestamp(1577869200000L),
+                        0,
                         Season.SPRING,
                         false),
                 new Indexes(0L, 0L, 0L,0L));
         var p2 = new Gathering(2L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564218000000L),
-                0,
+                        new Timestamp(1577869500000L),
+                        0,
                         Season.SPRING,
                         false),
                 new Indexes(0L, 0L, 0L,0L));
         var p3 = new Gathering(3L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564221600000L),
-                0,
+                        new Timestamp(1577869800000L),
+                        0,
                         Season.SPRING,
                         false),
                 new Indexes(0L, 0L, 0L,0L));
         var p4 = new Gathering(4L, 1L,
                 10,
                 new TimeInformation(
-                        new Timestamp(1564223400000L),
+                        new Timestamp(1577872200000L),
                         0,
                         Season.SPRING,
                         false),
                 new Indexes(0L, 0L, 0L,0L));
 
         Mockito.when(gatheringRepository.getPastDayGathering(1L,
-                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
+                Date.valueOf(new Timestamp(1577869800000L).toLocalDateTime().toLocalDate())))
                 .thenReturn(List.of(p1, p2, p3));
-        /*Mockito.when(gatheringRepository.getFutureDayGathering(1L,
-                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate())))
-                .thenReturn(List.of(p4));*/
+
+        var toTime = getLastDateTimeFromTimestamp(new Timestamp(1577869800000L));
+        Mockito.when(predictionRepository.findByIdFromInterval(1L,
+                new Timestamp(1577869800000L).toLocalDateTime(),toTime))
+                .thenReturn(List.of(p4));
+
 
         Collection<Gathering> gatherings = gatheringService.dayGathering(1L,
-                Date.valueOf(new Timestamp(1564221600000L).toLocalDateTime().toLocalDate()));
-        assertThat(gatherings).hasSize(3).extracting(Gathering::getDetectionTime).contains(
-                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime());
+                Date.valueOf(new Timestamp(1577869800000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(4).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
     }
 
     @Test

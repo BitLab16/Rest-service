@@ -113,6 +113,25 @@ class TrackedPointControllerTest {
     }
 
     @Test
+    void fullDayWithCodeShouldReturnAllGatheringsOfPointWithThatCode() throws Exception {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                factory.createPoint(new Coordinate( -110, 30)));
+        Timestamp currTime = new Timestamp(System.currentTimeMillis());
+        Mockito.when(pointService.dayGathering(100L,Date.valueOf(currTime.toLocalDateTime().toLocalDate())))
+                .thenReturn(java.util.Optional.of(p1));
+
+        mvc.perform(get("/point/{code}/full-day", 100L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", isA(LinkedHashMap.class)));
+
+    }
+
+    @Test
     void whenValidCodeForAvg_pointStatisticShouldBeReturned() throws Exception {
         var expected = new TrackedPointStatistic();
         expected.addMetric(DayOfWeek.TUESDAY, 8, 5);

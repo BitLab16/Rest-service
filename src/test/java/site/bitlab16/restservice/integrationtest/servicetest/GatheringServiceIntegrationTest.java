@@ -151,8 +151,151 @@ class GatheringServiceIntegrationTest {
     }
 
     @Test
+    void whenGetPastDayHoursGatheringsWithId_thenListOfRoundedGatheringOfThatPointShouldBeReturn() {
+        var p1 = new Gathering(1L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577869200000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var p2 = new Gathering(2L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577871000000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+
+        var p3 = new Gathering(3L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577872800000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var p4 = new Gathering(4L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577876400000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+
+        Mockito.when(gatheringRepository.getPastDayHoursGatherings(1L,
+                Date.valueOf(new Timestamp(1577872800000L).toLocalDateTime().toLocalDate())))
+                .thenReturn(List.of(p1, p2, p3));
+
+        var toTime = getLastDateTimeFromTimestamp(new Timestamp(1577872800000L));
+        Mockito.when(predictionRepository.findOnlyHoursByIdFromInterval(1L,
+                new Timestamp(1577872800000L).toLocalDateTime(),toTime))
+                .thenReturn(List.of(p4));
+
+
+        Collection<Gathering> gatherings = gatheringService.dayGatheringsOnlyHour(1L,
+                Date.valueOf(new Timestamp(1577872800000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(4).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
+    }
+
+    @Test
+    void whenGetPastDayHoursGatherings_thenListOfRoundedGatheringShouldBeReturn() {
+        var p1 = new Gathering(1L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577869200000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var p2 = new Gathering(2L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577871000000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+
+        var p3 = new Gathering(3L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577872800000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var p4 = new Gathering(4L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577876400000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+
+        Mockito.when(gatheringRepository.getPastDayHoursGatherings(
+                Date.valueOf(new Timestamp(1577872800000L).toLocalDateTime().toLocalDate())))
+                .thenReturn(List.of(p1, p2, p3));
+
+        var toTime = getLastDateTimeFromTimestamp(new Timestamp(1577872800000L));
+        Mockito.when(predictionRepository.findAllOnlyHoursFromInterval(
+                new Timestamp(1577872800000L).toLocalDateTime(),toTime))
+                .thenReturn(List.of(p4));
+
+
+        Collection<Gathering> gatherings = gatheringService.dayGatheringsOnlyHour(
+                Date.valueOf(new Timestamp(1577872800000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(4).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime(), p4.getDetectionTime());
+    }
+
+    @Test
+    void whenIntervalGatheringFromDateWithId_thenListOfGatheringOfThatPointInDateIntervalShouldBeReturn(){
+        var p1 = new Gathering(1L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577869200000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var p2 = new Gathering(2L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577871000000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+
+        var p3 = new Gathering(3L, 1L,
+                10,
+                new TimeInformation(
+                        new Timestamp(1577872800000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+
+        Mockito.when(gatheringRepository.intervalGatheringFromDate(1L,
+                Date.valueOf(new Timestamp(1577869200000L).toLocalDateTime().toLocalDate()),
+                Date.valueOf(new Timestamp(1577872800000L).toLocalDateTime().toLocalDate())))
+                .thenReturn(List.of(p1, p2, p3));
+
+        Collection<Gathering> gatherings = gatheringService.intervalGatheringFromDate(1L,
+                Date.valueOf(new Timestamp(1577869200000L).toLocalDateTime().toLocalDate()),
+                Date.valueOf(new Timestamp(1577872800000L).toLocalDateTime().toLocalDate()));
+        assertThat(gatherings).hasSize(3).extracting(Gathering::getDetectionTime).contains(
+                p1.getDetectionTime(), p2.getDetectionTime(), p3.getDetectionTime());
+    }
+
+    @Test
     void whenGetYearGatheringFromDate_thenListOfPastYearGatheringShouldBeReturn() {
-        GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
                 new TimeInformation(
@@ -190,7 +333,6 @@ class GatheringServiceIntegrationTest {
 
     @Test
     void whenGetYearGatheringFromDateWithId_thenListOfPastYearGatheringOfThatPointShouldBeReturn() {
-        GeometryFactory factory = new GeometryFactory();
         var p1 = new Gathering(1L, 1L,
                 10,
                 new TimeInformation(

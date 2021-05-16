@@ -196,6 +196,70 @@ class TrackedPointServiceIntegrationTest {
     }
 
     @Test
+    void whenDayHoursGathering_thenTrackedPointShouldBeFound() {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                factory.createPoint(new Coordinate( -110, 30)));
+        var g1 = new Gathering(
+                1L,
+                1L,
+                5,
+                new TimeInformation(
+                        new Timestamp(1564223400000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var g2 = new Gathering(
+                2L,
+                1L,
+                6,
+                new TimeInformation(
+                        new Timestamp(1564225200000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var g3 = new Gathering(
+                3L,
+                1L,
+                7,
+                new TimeInformation(
+                        new Timestamp(1564227000000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var g4 = new Gathering(
+                4L,
+                1L,
+                8,
+                new TimeInformation(
+                        new Timestamp(1564228800000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        List<Long> trackedPointId = new ArrayList<Long>();
+        trackedPointId.add(1L);
+        trackedPointId.add(1L);
+        trackedPointId.add(1L);
+        trackedPointId.add(1L);
+
+        Mockito.when(pointRepository.findAllById(trackedPointId)).thenReturn(Arrays.asList(p1));
+        Date date = Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate());
+        Mockito.when(gatheringServiceMock.dayGatheringsOnlyHour(date))
+                .thenReturn(Arrays.asList(g1, g2, g3, g4));
+
+        Collection<TrackedPoint> points = pointService.dayHoursGatherings(date);
+        assertThat(points).hasSize(1).extracting(TrackedPoint::getName).contains("Piazza dei signori");
+        assertThat(points).extracting(TrackedPoint::getGatherings).contains(Arrays.asList(g1, g2, g3, g4));
+    }
+
+    @Test
     void whenDayGathering_thenTrackedPointShouldBeFound() {
         GeometryFactory factory = new GeometryFactory();
         var p1 = new TrackedPoint(1L,
@@ -249,15 +313,72 @@ class TrackedPointServiceIntegrationTest {
         trackedPointId.add(1L);
         trackedPointId.add(1L);
         Mockito.when(pointRepository.findAllById(trackedPointId)).thenReturn(Arrays.asList(p1));
-        Mockito.when(gatheringServiceMock.dayGathering(
-                Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate())))
-                .thenReturn(Arrays.asList(g1, g2, g3, g4));
         Date date = Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate());
+        Mockito.when(gatheringServiceMock.dayGathering(date))
+                .thenReturn(Arrays.asList(g1, g2, g3, g4));
+
         Collection<TrackedPoint> points = pointService.dayGathering(date);
         assertThat(points).hasSize(1).extracting(TrackedPoint::getName).contains("Piazza dei signori");
         assertThat(points).extracting(TrackedPoint::getGatherings).contains(Arrays.asList(g1, g2, g3, g4));
     }
 
+    @Test
+    void whenDayGatheringWithCode_thenTrackedPointWithThatCodeShouldBeFound() {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                factory.createPoint(new Coordinate( -110, 30)));
+        var g1 = new Gathering(
+                1L,
+                1L,
+                5,
+                new TimeInformation(
+                        new Timestamp(1564223400000L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var g2 = new Gathering(
+                2L,
+                1L,
+                6,
+                new TimeInformation(
+                        new Timestamp(1564223400001L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var g3 = new Gathering(
+                3L,
+                1L,
+                7,
+                new TimeInformation(
+                        new Timestamp(1564223400002L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+        var g4 = new Gathering(
+                4L,
+                1L,
+                8,
+                new TimeInformation(
+                        new Timestamp(1564223399999L),
+                        0,
+                        Season.SPRING,
+                        false),
+                new Indexes(0L, 0L, 0L,0L));
+
+        Mockito.when(pointRepository.findByCode(p1.getCode())).thenReturn(Optional.of(p1));
+        Date date = Date.valueOf(new Timestamp(1564223400000L).toLocalDateTime().toLocalDate());
+        Mockito.when(gatheringServiceMock.dayGathering(1L, date))
+                .thenReturn(Arrays.asList(g1, g2, g3, g4));
+        Optional<TrackedPoint> point = pointService.dayGathering(100L, date);
+        assertThat(point.get().getName()).isEqualTo("Piazza dei signori");
+        assertThat(point.get().getId()).isEqualTo(1L);
+    }
 
     private void verifyFindAllTrackedPointsIsCalledOnce() {
         Mockito.verify(pointRepository, VerificationModeFactory.times(1)).findAll();

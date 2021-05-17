@@ -27,10 +27,6 @@ public class GatheringService {
         this.predictionRepository = predictionRepository;
     }
 
-    @KafkaListener(topics = "${gathering.topic.name}", containerFactory = "gatheringKafkaListenerContainerFactory")
-    public void listenGroupFoo(List<Gathering> gathering) {
-        repository.saveAll(gathering);
-    }
 
     private boolean isPredictionAvailable(Timestamp date) {
         return date.after(Timestamp.valueOf("2019-12-31 23:55:00"));
@@ -59,7 +55,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGathering(Date date) {
         var past = repository.getPastDayGathering(date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var timeTime = getLastDateTimeFromTimestamp(maxDetectionTime);
@@ -71,7 +70,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGathering(Long id, Date date) {
         var past = repository.getPastDayGathering(id, date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);
@@ -83,7 +85,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGatheringsOnlyHour(Long id, Date date) {
         var past = repository.getPastDayHoursGatherings(id, date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);
@@ -95,7 +100,10 @@ public class GatheringService {
 
     public Collection<Gathering> dayGatheringsOnlyHour(Date date) {
         var past = repository.getPastDayHoursGatherings(date);
-        var maxDetectionTime = getLastTimeFromGatherings(past);
+        var maxDetectionTime = Timestamp.valueOf(date.toLocalDate().atStartOfDay());
+        if(!past.isEmpty()) {
+            maxDetectionTime = getLastTimeFromGatherings(past);
+        }
         List<Gathering> future = Collections.emptyList();
         if(isPredictionAvailable(maxDetectionTime)) {
             var lastTime = getLastDateTimeFromTimestamp(maxDetectionTime);

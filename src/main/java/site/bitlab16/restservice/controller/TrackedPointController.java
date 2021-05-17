@@ -1,6 +1,8 @@
 package site.bitlab16.restservice.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import site.bitlab16.restservice.exception.PointNotFoundException;
 import site.bitlab16.restservice.model.TrackedPoint;
@@ -16,6 +18,8 @@ import java.util.Collection;
 @CrossOrigin(origins = { "http://localhost:8081", "http://localhost:8080" })
 public class TrackedPointController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrackedPointController.class);
+
     private final TrackedPointService pointService;
 
     public TrackedPointController(TrackedPointService pointService) {
@@ -25,7 +29,8 @@ public class TrackedPointController {
     @JsonView(View.Summary.class)
     @GetMapping(value= "/points")
     public Collection<TrackedPoint> getCurrentDayGatheringDetected() {
-        Timestamp currTime = new Timestamp(System.currentTimeMillis());
+        var currTime = new Timestamp(System.currentTimeMillis());
+        LOGGER.debug("Current time for http call /points: {}", currTime);
         return pointService.dayHoursGatherings(Date.valueOf(currTime.toLocalDateTime().toLocalDate()));
     }
 
@@ -39,14 +44,14 @@ public class TrackedPointController {
     @JsonView(View.Summary.class)
     @GetMapping(value= "/point/{code}/full-day")
     public TrackedPoint dayGatheringForPointGivenCode(@PathVariable("code") Long code) {
-        Timestamp currTime = new Timestamp(System.currentTimeMillis());
+        var currTime = new Timestamp(System.currentTimeMillis());
         return pointService.dayGathering(code,Date.valueOf(currTime.toLocalDateTime().toLocalDate()))
                 .orElseThrow(() -> new PointNotFoundException(code));
     }
 
     @GetMapping(value = "/point/{id}/avg")
     public TrackedPointStatistic pointDetailsBasedOnIdAndTime(@PathVariable("id") Long id) {
-        Timestamp currTime = new Timestamp(System.currentTimeMillis());
+        var currTime = new Timestamp(System.currentTimeMillis());
         return pointService.avgFlowByTrackedPointCode(id,
                 Date.valueOf(currTime.toLocalDateTime().toLocalDate()),
                 Date.valueOf(currTime.toLocalDateTime().minusWeeks(24).toLocalDate()))

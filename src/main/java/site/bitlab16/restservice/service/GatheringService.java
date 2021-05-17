@@ -27,32 +27,6 @@ public class GatheringService {
         this.predictionRepository = predictionRepository;
     }
 
-    @KafkaListener(topics = "${gathering-source-1.topic.name}", containerFactory = "gatheringKafkaListenerContainerFactory")
-    public void listenTopicSource1(List<Gathering> gathering) {
-        repository.saveAll(gathering);
-    }
-
-    @KafkaListener(topics = "${gathering-source-2.topic.name}", containerFactory = "gatheringKafkaListenerContainerFactory")
-    public void listenTopicSource2(List<Gathering> gathering) {
-        repository.saveAll(gathering);
-    }
-
-    @KafkaListener(topics = "${gathering-source-3.topic.name}", containerFactory = "gatheringKafkaListenerContainerFactory")
-    public void listenTopicSource3(List<Gathering> gathering) {
-        repository.saveAll(gathering);
-    }
-
-    @KafkaListener(topics = "${gathering-source-4.topic.name}", containerFactory = "gatheringKafkaListenerContainerFactory")
-    public void listenTopicSource4(List<Gathering> gathering) {
-        repository.saveAll(gathering);
-    }
-
-    @KafkaListener(topics = "${gathering-source-5.topic.name}", containerFactory = "gatheringKafkaListenerContainerFactory")
-    public void listenTopicSource5(List<Gathering> gathering) {
-        repository.saveAll(gathering);
-    }
-
-
 
     private boolean isPredictionAvailable(Timestamp date) {
         return date.after(Timestamp.valueOf("2019-12-31 23:55:00"));

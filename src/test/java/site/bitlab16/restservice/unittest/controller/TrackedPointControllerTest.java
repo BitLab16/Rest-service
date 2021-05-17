@@ -79,6 +79,7 @@ class TrackedPointControllerTest {
                 .andExpect(jsonPath("$[0].code").value(300L));
     }
 
+
     @Test
     void whenValidCode_pointShouldReturnRightPoint() throws Exception{
         mvc.perform(get("/point/{id}", 200L)
@@ -113,6 +114,61 @@ class TrackedPointControllerTest {
     }
 
     @Test
+    void pointsWithIncorrectTimeShouldReturnNoGatherings() throws Exception{
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                factory.createPoint(new Coordinate( -110, 30)));
+
+        Mockito.when(pointService.dayHoursGatherings(Date.valueOf(new Timestamp(1664216200000L)
+                .toLocalDateTime().toLocalDate()))).thenReturn(Collections.singletonList(p1));
+
+        mvc.perform(get("/points/time/{time}", Date.valueOf(new Timestamp(1564216200000L).toLocalDateTime().toLocalDate()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.hasSize(0)));
+    }
+
+    @Test
+    void fullDayWithCodeShouldReturnAllGatheringsOfPointWithThatCode() throws Exception {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                factory.createPoint(new Coordinate( -110, 30)));
+        Timestamp currTime = new Timestamp(System.currentTimeMillis());
+        Mockito.when(pointService.dayGathering(100L,Date.valueOf(currTime.toLocalDateTime().toLocalDate())))
+                .thenReturn(java.util.Optional.of(p1));
+
+        mvc.perform(get("/point/{code}/full-day", 100L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", isA(LinkedHashMap.class)));
+
+    }
+
+    @Test
+    void fullDayWithInvalidCodeShouldReturnNotFoundStatus() throws Exception {
+        GeometryFactory factory = new GeometryFactory();
+        var p1 = new TrackedPoint(1L,
+                "Piazza dei signori",
+                100L,
+                "Una delle piazze più importati di padova",
+                factory.createPoint(new Coordinate( -110, 30)));
+        Timestamp currTime = new Timestamp(System.currentTimeMillis());
+        Mockito.when(pointService.dayGathering(100L,Date.valueOf(currTime.toLocalDateTime().toLocalDate())))
+                .thenReturn(java.util.Optional.of(p1));
+
+        mvc.perform(get("/point/{code}/full-day", -99L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
     void whenValidCodeForAvg_pointStatisticShouldBeReturned() throws Exception {
         var expected = new TrackedPointStatistic();
         expected.addMetric(DayOfWeek.TUESDAY, 8, 5);
@@ -135,6 +191,31 @@ class TrackedPointControllerTest {
         mvc.perform(get("/point/{id}/avg", 100L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void whenInvalidCodeForAvg_noPointStatisticShouldBeReturned() throws Exception {
+        var expected = new TrackedPointStatistic();
+        expected.addMetric(DayOfWeek.TUESDAY, 8, 5);
+        expected.addMetric(DayOfWeek.TUESDAY, 9, 9);
+        expected.addMetric(DayOfWeek.WEDNESDAY, 9, 12);
+        expected.addMetric(DayOfWeek.WEDNESDAY, 10, 8);
+
+        var from = Calendar.getInstance();
+        from.set(2019, Calendar.JULY, 5);
+        var to = Calendar.getInstance();
+        to.set(2019, Calendar.JULY, 3);
+
+        var currTime = new Timestamp(System.currentTimeMillis());
+
+        Mockito.when(pointService.avgFlowByTrackedPointCode(100L,
+                Date.valueOf(currTime.toLocalDateTime().toLocalDate()),
+                Date.valueOf(currTime.toLocalDateTime().minusWeeks(24).toLocalDate())))
+                .thenReturn(Optional.of(expected));
+
+        mvc.perform(get("/point/{id}/avg", -99L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 }

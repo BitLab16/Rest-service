@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>site.bitlab16</groupId>
 	<artifactId>rest-service</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>rest-service</name>
 	<description>Rest service for GDP project</description>
